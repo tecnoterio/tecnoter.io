@@ -5,5 +5,5 @@
 layout: home
 ---
 tecnoter.io
-
+{% svg "/assets/tt_logo_hor.svg" %}
 
