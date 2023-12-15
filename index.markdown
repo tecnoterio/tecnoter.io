@@ -5,5 +5,5 @@
 layout: home
 ---
 tecnoter.io
-
+{% svg "/docs/path/to/foo bar.svg" %}
 
