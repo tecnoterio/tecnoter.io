@@ -1,0 +1,8 @@
+{
+  "title": {{ .Title | jsonify }},
+  "slug": {{ .Slug | default .File.BaseFileName | jsonify }},
+  "date": {{ .Date.Format "2006-01-02" | jsonify }},
+  "content": {{ .Plain | jsonify }},
+  "tags": {{ .Params.tags | default (slice) | jsonify }}
+}
+

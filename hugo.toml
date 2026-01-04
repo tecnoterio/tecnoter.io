@@ -1,0 +1,35 @@
+baseURL = 'https://tecnoter.io/'
+languageCode = 'en-us'
+title = 'tecnoter.io'
+uglyURLs = false
+theme = "tecnoter.io"
+
+[outputs]
+  home = ["HTML", "JSON", "SearchIndex", "RSS"]
+  section = ["HTML", "JSON"]
+  page = ["HTML", "JSON"]
+
+[outputFormats.SearchIndex]
+  path = "/search"
+  mediaType = "application/json"
+  rel = "searchindex"
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 0
+
+  [[menu.main]]
+    name = "Posts"
+    url = "/posts/"
+    weight = 1
+
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 2

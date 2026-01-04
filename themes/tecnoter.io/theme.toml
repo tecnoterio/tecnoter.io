@@ -1,0 +1,12 @@
+name = "tecnoter"
+description = "High-performance retro terminal theme for tecnoter.io"
+license = "MIT"
+author = "tecnoter team"
+homepage = "https://tecnoter.io"
+tags = ["retro", "terminal", "dark", "minimalist"]
+features = ["crt-effects", "animated-sl", "bbs-system"]
+min_hugo_version = "0.120.0"
+
+[author]
+  name = "tecnoter"
+  homepage = "https://tecnoter.io"
