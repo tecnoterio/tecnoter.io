@@ -1,0 +1,16 @@
+pub mod ls;
+pub mod whoami;
+pub mod fortune;
+pub mod cowsay;
+pub mod uptime;
+pub mod weather;
+pub mod cat;
+pub mod man;
+pub mod help;
+pub mod top;
+pub mod who;
+pub mod social;
+pub mod date;
+pub mod motd;
+pub mod curl;
+pub mod cd;

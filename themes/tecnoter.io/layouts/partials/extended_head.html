@@ -41,6 +41,16 @@
 </style>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+  const hasCSSFilters = CSS.supports('filter', 'blur(1px)');
+  const isLargeScreen = window.innerWidth > 600;
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  // If mobile, no CSS filter support, or touch device, skip boot sequence and show clean site
+  if (!hasCSSFilters || !isLargeScreen || isTouchDevice) {
+    startLogoAnimation();
+    return;
+  }
+
   const container = document.querySelector('.container');
   if (container) {
     container.classList.add('hidden-site');

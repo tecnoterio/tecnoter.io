@@ -3,87 +3,31 @@
 <head>
   <meta charset="utf-8">
   <title>{{ .Site.Title }}</title>
+  {{ template "_internal/opengraph.html" . }}
+  {{ template "_internal/twitter_cards.html" . }}
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/terminal.css">
+  <noscript>
+    <style>
+      #low-tech-hub { display: block !important; }
+      #terminal, .hardware-controls, .bezel-logo, .crt-roll, .crt-overlay { display: none !important; }
+      body { overflow: auto !important; background: #111 !important; display: block !important; padding: 20px !important; }
+      .hub-frame { width: 100% !important; max-width: 800px; margin: 0 auto; }
+    </style>
+  </noscript>
 </head>
-<body class="scanlines">
-<div class="crt-roll"></div>
-<div class="crt-overlay"></div>
+<body class="">
+{{ partial "hardware.html" . }}
+{{ partial "terminal_frame.html" . }}
 
-<!-- PHYSICAL MONITOR CONTROLS -->
-<div class="hardware-controls">
-  <div class="control-label">MODE</div>
-  <div class="control-knob active" id="knob-terminal" title="Terminal Mode"></div>
-  <div class="control-knob" id="knob-hub" title="Low-Tech Hub"></div>
-  <div class="control-label">POWER</div>
-  <div class="power-lamp"></div>
-</div>
-
-<div class="bezel-logo">
-  <img src="/assets/tt_logo_hor.svg" alt="tecnoter logo">
-</div>
-
-<!-- Immersive CRT Display -->
-<div id="terminal">
-  <div id="output"></div>
-  <div id="input-line">
-    <span id="prompt"></span>
-    <input id="input" autofocus autocomplete="on">
-  </div>
-</div>
-
-<!-- LOW-TECH HUB MODE (Standard HTML Theme) -->
-<div id="low-tech-hub" style="display: none;">
-  <div class="hub-frame">
-    <header class="hub-header">
-      <img src="/assets/tt_logo_hor.svg" alt="tecnoter logo">
-      <h1>TECNOTER NODE 1</h1>
-    </header>
-    
-    <div class="hub-main">
-      <section class="hub-left">
-        <nav class="hub-nav">
-          <div class="nav-group">
-            <h3>DIRECTORY</h3>
-            <a href="javascript:void(0)" class="hub-link" data-cmd="cat bio">BIOGRAPHY</a>
-            <a href="javascript:void(0)" class="hub-link" data-cmd="cat skills">SKILLS</a>
-            <a href="javascript:void(0)" class="hub-link" data-cmd="cat contact">CONTACT</a>
-            <a href="javascript:void(0)" class="hub-link" data-cmd="cat vision">VISION</a>
-          </div>
-          <div class="nav-group">
-            <h3>SYSTEM</h3>
-            <a href="javascript:void(0)" class="hub-link" data-cmd="stats">NODE STATS</a>
-            <a href="javascript:void(0)" class="hub-link" data-cmd="who">ONLINE USERS</a>
-            <a href="javascript:void(0)" class="hub-link" data-cmd="bulletins">NEWS FEED</a>
-          </div>
-        </nav>
-      </section>
-
-      <section class="hub-right">
-        <h3>LATEST LOGS / POSTS</h3>
-        <div id="hub-posts" class="hub-post-list">
-          <p>Loading encrypted data index...</p>
-        </div>
-      </section>
-    </div>
-
-    <footer class="hub-footer">
-      <span>SECURE PLAIN-TEXT HUB ACCESS v2.0</span>
-      <button class="mode-revert" id="revert-terminal">RE-ENGAGE CRT TERMINAL</button>
-    </footer>
-  </div>
-</div>
-
-<div id="pager" hidden>
-  <div id="pager-header">
-    <span id="pager-title"></span>
-    <span class="pager-hint">— press q to quit</span>
-  </div>
-  <pre id="pager-content"></pre>
-</div>
-
+<script>
+  window.siteSocial = {{ .Site.Params.social | jsonify | safeJS }};
+  window.siteFortunes = {{ .Site.Data.fortunes.fortunes | jsonify | safeJS }};
+  window.isInternalPage = false;
+</script>
 <script type="module" src="/js/terminal.js"></script>
 </body>
 </html>

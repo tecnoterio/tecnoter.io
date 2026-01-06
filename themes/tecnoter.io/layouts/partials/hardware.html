@@ -1,0 +1,35 @@
+<div class="crt-roll"></div>
+<div class="crt-overlay"></div>
+
+<!-- PHYSICAL MONITOR CONTROLS -->
+<div class="hardware-controls">
+  <div class="control-group clickable-group" id="group-mode" title="Switch between CRT and HUB mode" role="button">
+    <div class="control-label">MODE</div>
+    <div class="control-knob mode-terminal" id="knob-mode"></div>
+  </div>
+  
+  <div class="control-group clickable-group" id="group-channels" title="Switch Channels" role="button">
+    <div class="control-label">CHANS</div>
+    <div class="control-knob" id="knob-channels"></div>
+  </div>
+
+  <div class="control-group clickable-group" id="group-debug" title="Toggle System Logging" role="button">
+    <div class="control-label">LOGS</div>
+    <div class="control-knob" id="knob-debug"></div>
+  </div>
+
+  <div class="lamps-cluster">
+    <div class="lamp-group">
+      <div class="control-label">PWR</div>
+      <div class="power-lamp"></div>
+    </div>
+    <div class="lamp-group">
+      <div class="control-label">LINK</div>
+      <div class="uplink-lamp" id="lamp-uplink" title="WASM System Core Status"></div>
+    </div>
+  </div>
+</div>
+
+<div class="bezel-logo clickable-group" id="logo-home" title="Go to Hub Home" role="button">
+  <img src="/assets/tt_logo_hor.svg" alt="tecnoter logo">
+</div>

@@ -1,0 +1,19 @@
+<div id="terminal" {{ if or (not .IsHome) (ne .Site.Params.defaultMode "terminal") }}style="display: none;"{{ end }}>
+  <div id="output"></div>
+  <div id="input-line">
+    <span id="prompt"></span>
+    <input id="input" autofocus autocomplete="off" spellcheck="false">
+    <span id="suggestion"></span>
+    <span id="cursor"></span>
+  </div>
+</div>
+
+{{ partial "hub_frame.html" . }}
+
+<div id="pager" hidden>
+  <div id="pager-header">
+    <span id="pager-title"></span>
+    <span class="pager-hint">— press q to quit</span>
+  </div>
+  <pre id="pager-content"></pre>
+</div>

@@ -1,60 +1,39 @@
-// Try importing from modules, with fallback to global scope
-let state, fs, VALID_USERS, input, output, print, getPS1, updatePrompt, run, initListeners;
-
-try {
-  // Import from modules if available
-  import('/js/system.js').then(systemModule => {
-    state = systemModule.state;
-    fs = systemModule.fs;
-    VALID_USERS = systemModule.VALID_USERS;
-    
-    // Auto-test for system default mode
-    systemModule.checkCompatibility();
-    
-    import('/js/ui.js').then(uiModule => {
-      input = uiModule.input;
-      output = uiModule.output;
-      print = uiModule.print;
-      getPS1 = uiModule.getPS1;
-      updatePrompt = uiModule.updatePrompt;
-      
-      initTerminal();
-    }).catch(err => {
-      console.error("UI module error:", err);
-    });
-  }).catch(err => {
-    console.error("System module error:", err);
-  });
-} catch (e) {
-  // Fallback to global objects
-  if (window.terminalSystem) {
-    state = window.terminalSystem.state;
-    fs = window.terminalSystem.fs;
-    VALID_USERS = window.terminalSystem.VALID_USERS;
-  }
-  
-  if (window.terminalUI) {
-    input = window.terminalUI.input;
-    output = window.terminalUI.output;
-    print = window.terminalUI.print;
-    getPS1 = window.terminalUI.getPS1;
-    updatePrompt = window.terminalUI.updatePrompt;
-  }
-  
-  document.addEventListener('DOMContentLoaded', initTerminal);
-}
+import { state, fs, VALID_USERS, syncState, initWasm, wasm } from '/js/system.js';
 
 /* -------------------------
    SESSIONS & LOGOUT
 -------------------------- */
 
+let audioCtx = null;
+let input, output, print, getPS1, updatePrompt, initUIElements, run, initListeners;
+
+async function beep(freq = 800, duration = 150) {
+  if (!audioCtx) return;
+  try {
+    if (audioCtx.state === 'suspended') {
+      await audioCtx.resume();
+    }
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    oscillator.start();
+    setTimeout(() => oscillator.stop(), duration);
+  } catch (e) {
+    console.warn("Audio playback failed:", e);
+  }
+}
+
 function logout() {
-  state.loginState = "BOOT";
+  state.loginState = "UNINITIALIZED";
   state.currentUser = "guest";
   state.cwd = "/";
-  updatePrompt();
-  output.innerHTML = "";
-  print("Session terminated. Logging out...");
+  if (updatePrompt) updatePrompt();
+  if (output) output.innerHTML = "";
+  if (print) print("Session terminated. Logging out...");
   setTimeout(boot, 1000);
 }
 
@@ -63,63 +42,55 @@ function logout() {
 -------------------------- */
 async function boot() {
   state.loginState = "BOOT";
-  updatePrompt();
-  input.disabled = true;
+  if (updatePrompt) updatePrompt();
+  if (input) input.disabled = true;
   
-  // Retro boot beep
-  try {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    oscillator.start();
-    setTimeout(() => oscillator.stop(), 150);
-  } catch(e) {}
+  if (audioCtx && audioCtx.state === 'suspended') {
+    await audioCtx.resume();
+  }
 
-  const bootMessages = [
-    "TECNOTER.IO(TM) CORE SYSTEM",
-    "",
-    "LOADING SYSTEM MODULES...",
-    "NET_STACK: TCP/IP v6 READY",
-    "SSH_DAEMON: LISTENING ON PORT 22",
-    "HTTP_DAEMON: READY",
-    "",
-    "CONNECTING TO TECNOTER NETWORK...",
-    "CARRIER 14400 / ARQ / V.32bis",
-    "CONNECT 14400/REL - CD 1",
-    "PROTOCOL: LAP-M",
-    "COMPRESSION: V.42bis",
-    "",
-    "*** WELCOME TO THE TECNOTER.IO NODE ***",
-    ""
-  ];
+  beep(800, 150);
 
-  const hasHash = !!window.location.hash;
-  const delay = hasHash ? 50 : 150; // Slower line simulation
+  const currentWasm = window.terminalSystem?.wasm || wasm;
 
-  for (const msg of bootMessages) {
-    print(msg);
-    await new Promise(resolve => setTimeout(resolve, Math.random() * delay + (delay/2)));
+  if (currentWasm) {
+    const response = currentWasm.process_input(state, "_boot");
+    if (response && response.handled) {
+      const hasHash = !!window.location.hash;
+      const delay = hasHash ? 50 : 150;
+
+      for (const lineObj of response.lines) {
+        if (print) print(lineObj.text, lineObj.lineType);
+        await new Promise(resolve => setTimeout(resolve, Math.random() * delay + (delay/2)));
+      }
+      
+      if (response.state) {
+        syncState(response.state);
+        if (updatePrompt) updatePrompt();
+      }
+    }
+  } else {
+    if (print) {
+        print("SYSTEM CORE: ASYNC LOADING...", "bbs-footer");
+        await new Promise(r => setTimeout(r, 1000));
+        print("TECNOTER.IO(TM) V2.0 (JS-FALLBACK)");
+        print("WARNING: WASM CORE OFFLINE");
+        print("");
+    }
   }
 
   startLoginProcess();
 }
 
 async function simulateTyping(text) {
+  if (!input) return;
   input.value = "";
   const body = document.body;
   
   for (let i = 0; i < text.length; i++) {
     input.value += text[i];
-    
-    // Trigger input event for dynamic width and cursor positioning
     input.dispatchEvent(new Event('input'));
     
-    // Add random glitch effect during typing
     if (Math.random() > 0.8) {
       body.classList.add('glitch');
       setTimeout(() => body.classList.remove('glitch'), 50);
@@ -132,11 +103,15 @@ async function simulateTyping(text) {
 
 function startLoginProcess() {
   state.loginState = "LOGIN";
-  updatePrompt();
-  input.disabled = false;
-  input.focus();
+  if (updatePrompt) updatePrompt();
+  if (input) {
+    input.disabled = false;
+    input.focus();
+  }
   
-  const indicator = print("", "auto-login-indicator");
+  const indicator = print ? print("", "auto-login-indicator") : null;
+  if (!indicator) return;
+
   let timeLeft = 10;
 
   const updateIndicator = () => {
@@ -148,24 +123,20 @@ function startLoginProcess() {
     const skipBtn = document.getElementById('skip-login');
     if (skipBtn) {
         skipBtn.onclick = async () => {
-          if (state.loginState === "LOGIN") {
-            if (state.loginTicker) clearInterval(state.loginTicker);
-            document.querySelectorAll(".auto-login-indicator").forEach(i => i.remove());
-            await simulateTyping("guest");
-            handleLogin('guest');
-          }
+          if (state.loginTicker) clearInterval(state.loginTicker);
+          document.querySelectorAll(".auto-login-indicator").forEach(i => i.remove());
+          await simulateTyping("guest");
+          handleLogin('guest');
         };
     }
     
     const bbsBtn = document.getElementById('bbs-login');
     if (bbsBtn) {
         bbsBtn.onclick = async () => {
-          if (state.loginState === "LOGIN") {
-            if (state.loginTicker) clearInterval(state.loginTicker);
-            document.querySelectorAll(".auto-login-indicator").forEach(i => i.remove());
-            await simulateTyping("bbs");
-            handleLogin('bbs');
-          }
+          if (state.loginTicker) clearInterval(state.loginTicker);
+          document.querySelectorAll(".auto-login-indicator").forEach(i => i.remove());
+          await simulateTyping("bbs");
+          handleLogin('bbs');
         };
     }
   };
@@ -177,92 +148,89 @@ function startLoginProcess() {
     updateIndicator();
     if (timeLeft <= 0) {
       clearInterval(state.loginTicker);
-      if (state.loginState === "LOGIN") {
-        document.querySelectorAll(".auto-login-indicator").forEach(i => i.remove());
-        await simulateTyping("guest");
-        handleLogin("guest");
-      }
+      document.querySelectorAll(".auto-login-indicator").forEach(i => i.remove());
+      await simulateTyping("guest");
+      handleLogin("guest");
     }
   }, 1000);
 }
 
-function isValidUser(user) {
-  return VALID_USERS.includes(user.toLowerCase());
-}
-
 async function handleLogin(user) {
   if (state.loginTicker) clearInterval(state.loginTicker);
-  const indicators = document.querySelectorAll(".auto-login-indicator");
-  indicators.forEach(i => i.remove());
+  document.querySelectorAll(".auto-login-indicator").forEach(i => i.remove());
   
   const username = (user || "").toLowerCase().trim();
 
   if (state.loginState === "LOGIN") {
     if (!username) return;
-    
-    // Visually confirm the username
-    print(username);
-    
-    // IMMEDIATELY clear the input to prevent accidental command execution
-    input.value = "";
+    state.loginState = "AUTHENTICATING";
+    if (updatePrompt) updatePrompt();
+    if (input) input.value = "";
 
-    if (!isValidUser(username)) {
-      print("Login incorrect.");
-      setTimeout(startLoginProcess, 1000);
-      return;
-    }
+    const currentWasm = window.terminalSystem?.wasm || wasm;
+    if (currentWasm) {
+      const response = currentWasm.process_input(state, `_login ${username}`);
+      if (response && response.handled) {
+        for (const lineObj of response.lines) {
+          if (print) print(lineObj.text, lineObj.lineType);
+        }
 
-    state.currentUser = username;
-    
-    // For BBS or guest user, skip password
-    if (username === "bbs" || username === "guest") {
-      print("\n--- ACCESS GRANTED ---");
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Clear screen for a fresh shell/bbs start
-      output.innerHTML = "";
-      
-      if (username === "bbs") {
-        run("bbs");
-      } else {
-        finishLogin();
+        if (response.state) {
+          syncState(response.state);
+
+          if (state.loginState === "LOGIN") {
+             if (updatePrompt) updatePrompt();
+             setTimeout(startLoginProcess, 1000);
+          } else if (state.loginState === "PASSWORD") {
+             if (updatePrompt) updatePrompt();
+             await new Promise(resolve => setTimeout(resolve, 800));
+          } else if (state.loginState === "PROMPT" || state.loginState === "BBS_MAIN") {
+             // Success - finishLogin or enterBBS will update prompt after their MOTD
+             if (state.loginState === "BBS_MAIN") {
+                import('/js/bbs.js').then(m => m.enterBBS());
+             } else {
+                finishLogin();
+             }
+          }
+        }
       }
-      return;
+    } else {
+        state.currentUser = username;
+        finishLogin();
     }
-    
-    // For other users, normal password flow
-    state.loginState = "PASSWORD";
-    updatePrompt();
-    input.value = "";
-    
-    await new Promise(resolve => setTimeout(resolve, 800));
-    print("********");
-    finishLogin();
   }
 }
 
 function finishLogin() {
   state.loginState = "PROMPT";
-  updatePrompt();
-  print("Authentication successful.");
-  print("Last login: " + new Date().toDateString() + " from 127.0.0.1");
-  print("");
   
-  const hasHash = !!window.location.hash;
-  if (hasHash) {
-    handleHash();
-  } else {
-    print(`Welcome to tecnoter.io BBS, ${state.currentUser}!`);
-    print("Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit.");
-    print("");
+  if (input) {
+    input.value = "";
+    input.disabled = false;
+    input.focus();
+    input.dispatchEvent(new Event('input'));
   }
+
+  // Use WASM MOTD
+  import('/js/commands.js').then(m => {
+      m.run("motd");
+      
+      const hash = (window.location.hash || "").substring(1);
+      // Don't cat bio if it's already in the motd
+      if (hash && hash !== "bio") {
+        handleHash();
+      }
+      if (updatePrompt) updatePrompt();
+  });
 }
 
 function handleHash() {
   const hash = window.location.hash.substring(1);
   if (hash) {
-    print(`${getPS1()} cat ${hash}`);
-    run(`cat ${hash}`);
+    import('/js/commands.js').then(m => {
+        if (print) print(`${getPS1()} cat ${hash}`);
+        m.run(`cat ${hash}`);
+    });
   }
 }
 
@@ -278,64 +246,108 @@ window.addEventListener("terminal-logout", () => {
    INIT
 -------------------------- */
 
-// Initialize terminal with debugging
 function initTerminal() {
-  // Rare hardware "failure" artifacts
   setInterval(() => {
     const rand = Math.random();
     const body = document.body;
-    
-    if (rand < 0.01) { // 1% chance for strong flicker
+    if (rand < 0.01) {
       body.classList.add('strong-flicker');
       setTimeout(() => body.classList.remove('strong-flicker'), 500 + Math.random() * 1000);
-    } else if (rand < 0.015) { // 0.5% chance for screen flash
-      const flash = document.createElement('div');
-      flash.classList.add('screen-flash');
-      document.body.appendChild(flash);
-      setTimeout(() => flash.remove(), 200);
     }
   }, 10000);
 
-  try {
-    // Load commands module
-    import('/js/commands.js').then(commandsModule => {
-      run = commandsModule.run;
-      
-      // Load listeners module
-      import('/js/listeners.js').then(listenersModule => {
-        initListeners = listenersModule.initListeners;
+  // Dynamic imports inside init function to break early circular dependency chains
+  Promise.all([
+    import('/js/ui.js'),
+    import('/js/commands.js'),
+    import('/js/listeners.js')
+  ]).then(([uiModule, commandsModule, listenersModule]) => {
+    // Capture from UI
+    initUIElements = uiModule.initUIElements;
+    print = uiModule.print;
+    updatePrompt = uiModule.updatePrompt;
+    getPS1 = uiModule.getPS1;
+    
+    // Capture from Commands
+    run = commandsModule.run;
+    
+    // Capture from Listeners
+    initListeners = listenersModule.initListeners;
+
+    // Initialize UI
+    if (!initUIElements()) {
+       console.warn("UI elements not found during initTerminal");
+    }
+    
+    // Sync references
+    input = uiModule.input;
+    output = uiModule.output;
+
+    fetch("/index.json")
+      .then(r => r.json())
+      .then(data => {
+        state.posts = data.posts || [];
+        state.pages = data.pages || [];
+        state.socials = data.socials || window.siteSocial || [];
+        state.fortunes = data.fortunes || window.siteFortunes || [];
+        state.systemInfo = data.systemInfo || state.systemInfo;
+        state.systemInfo.currentDate = new Date().toDateString();
         
-        // Then fetch posts and initialize
-        fetch("/posts/index.json")
-          .then(r => r.json())
-          .then(data => {
-            state.posts = data;
-            fs["/posts"] = state.posts.map(p => p.slug);
-            
-            initListeners({
-              onLogout: logout,
-              onLogin: handleLogin
-            });
-            
+        // Update virtual fs for completions if needed
+        fs["/posts"] = state.posts.map(p => p.slug);
+        fs["/pages"] = state.pages.map(p => p.slug);
+        
+        const allTags = [...new Set([...state.posts.flatMap(p => p.tags || []), ...state.pages.flatMap(p => p.tags || [])])];
+        const allCats = [...new Set([...state.posts.flatMap(p => p.categories || []), ...state.pages.flatMap(p => p.categories || [])])];
+        
+        fs["/tags"] = allTags;
+        fs["/categories"] = allCats;
+        fs["/"] = ["posts", "pages", "tags", "categories", ...state.pages.map(p => p.slug)];
+        
+        allTags.forEach(tag => {
+            fs[`/tags/${tag}`] = [
+                ...state.posts.filter(p => p.tags?.includes(tag)).map(p => p.slug),
+                ...state.pages.filter(p => p.tags?.includes(tag)).map(p => p.slug)
+            ];
+        });
+        
+        allCats.forEach(cat => {
+            fs[`/categories/${cat}`] = [
+                ...state.posts.filter(p => p.categories?.includes(cat)).map(p => p.slug),
+                ...state.pages.filter(p => p.categories?.includes(cat)).map(p => p.slug)
+            ];
+        });
+        
+        initListeners({ onLogout: logout, onLogin: handleLogin });
+        
+        // Only auto-boot on the index page if in terminal mode
+        if (state.systemMode === 'TERMINAL' && !window.isInternalPage) {
             boot();
-          })
-          .catch((err) => {
-            console.error("Error loading posts:", err);
-            
-            print("Error loading system core.");
-            initListeners({
-              onLogout: logout,
-              onLogin: handleLogin
-            });
-            boot();
-          });
-      }).catch(err => {
-        console.error("Failed to load listeners module:", err);
+        } else {
+            // In HUB mode or internal page, just ready the gateway
+            print("KERNEL LOADED (JS-WASM GATEWAY ONLINE)", "bbs-footer");
+        }
+      })
+      .catch((err) => {
+        console.error("Error loading system content:", err);
+        initListeners({ onLogout: logout, onLogin: handleLogin });
+        if (state.systemMode === 'TERMINAL') boot();
       });
-    }).catch(err => {
-      console.error("Failed to load commands module:", err);
-    });
-  } catch (err) {
-    console.error("Critical error during initialization:", err);
-  }
+  }).catch(err => {
+    console.error("Module loading sequence failed:", err);
+  });
 }
+
+window.terminalBoot = boot;
+// Start everything
+initWasm().then(() => {
+    // Proactive sync of uplink lamp after wasm load
+    setTimeout(() => {
+      if (window.terminalUI?.updateUplinkStatus) {
+          window.terminalUI.updateUplinkStatus();
+      }
+    }, 100);
+    initTerminal();
+}).catch(err => {
+    console.error("Critical System Error:", err);
+});

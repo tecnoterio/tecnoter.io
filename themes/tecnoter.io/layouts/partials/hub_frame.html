@@ -1,0 +1,85 @@
+<div id="low-tech-hub" {{ if and (.IsHome) (eq .Site.Params.defaultMode "terminal") }}style="display: none;"{{ end }}>
+  <div class="hub-frame">
+    <header class="hub-header">
+      <img src="/assets/tt_logo_hor.svg" alt="tecnoter logo">
+      <h1>TECNOTER NODE 1</h1>
+    </header>
+    
+    <div class="hub-main">
+      <section class="hub-left">
+        <nav class="hub-nav">
+          <div class="nav-group">
+            <h3>DIRECTORY</h3>
+            {{ range (where (where .Site.RegularPages "Section" "pages") "Params.group" "directory").ByWeight }}
+              <a href="{{ .RelPermalink }}" class="hub-link" data-cmd="cat pages/{{ .File.BaseFileName }}">{{ .Title | upper }}</a>
+            {{ end }}
+          </div>
+          <div class="nav-group">
+            <h3>SYSTEM</h3>
+            {{ range (where (where .Site.RegularPages "Section" "pages") "Params.group" "system").ByWeight }}
+              <a href="{{ .RelPermalink }}" class="hub-link" data-cmd="cat pages/{{ .File.BaseFileName }}">{{ .Title | upper }}</a>
+            {{ end }}
+            <a href="/posts/" class="hub-link" data-cmd="bulletins">NEWS FEED</a>
+          </div>
+          <div class="nav-group">
+            <h3>SOCIAL</h3>
+            {{ range .Site.Params.social }}
+              <a href="{{ .url }}" class="hub-link-external" target="_blank" rel="noopener noreferrer">{{ .name | upper }}</a>
+            {{ end }}
+          </div>
+          <div class="nav-group">
+            <h3>INTERACT</h3>
+            <a href="javascript:void(0)" onclick="alert('Press ' + (navigator.userAgent.indexOf('Mac') != -1 ? 'Cmd' : 'Ctrl') + ' + D to bookmark this node.')" class="hub-link">BOOKMARK NODE</a>
+          </div>
+        </nav>
+      </section>
+
+      <section class="hub-right">
+        {{ if .IsPage }}
+           <h3>{{ .Title | upper }}</h3>
+           <div class="hub-article-content">
+             {{ .Content }}
+           </div>
+        {{ else if .IsSection }}
+           <h3>LATEST LOGS / POSTS</h3>
+           <div id="hub-posts" class="hub-post-list">
+              {{ range .Pages }}
+                <div class="hub-post-item">
+                  <span class="hub-post-date">[{{ .Date.Format "2006-01-02" }}]</span>
+                  <a href="{{ .RelPermalink }}" class="hub-post-link">{{ .Title }}</a>
+                </div>
+              {{ end }}
+           </div>
+        {{ else }}
+           {{ $bio := .Site.Data.site_content.bio }}
+           <h3>{{ $bio.title | upper }}</h3>
+           <div class="hub-article-content">
+             <p>{{ $bio.content }}</p>
+           </div>
+        {{ end }}
+        
+        <div class="hub-footer-nav" style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
+           <button class="hub-back" id="hub-back" style="display:none;">« BACK TO INDEX</button>
+           
+           <div id="hub-posts-fallback" class="hub-post-list" style="margin-top: 20px;">
+              <h4>LATEST LOGS</h4>
+              {{ range first 5 (where .Site.RegularPages "Section" "posts") }}
+                <div class="hub-post-item">
+                  <span class="hub-post-date">[{{ .Date.Format "2006-01-02" }}]</span>
+                  <a href="{{ .RelPermalink }}" class="hub-post-link">{{ .Title }}</a>
+                </div>
+              {{ end }}
+           </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="hub-footer">
+      <div class="hub-wisdom" style="margin-bottom: 10px; color: #00ff66; opacity: 0.7; font-style: italic;">
+        {{ index (shuffle .Site.Data.fortunes.fortunes) 0 }}
+      </div>
+      <span>SECURE PLAIN-TEXT HUB ACCESS v2.5 (HUGO-FALLBACK)</span>
+      <button class="mode-revert" id="revert-terminal">RE-ENGAGE CRT TERMINAL</button>
+    </footer>
+  </div>
+</div>

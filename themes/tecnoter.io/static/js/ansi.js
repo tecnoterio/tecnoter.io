@@ -1,4 +1,4 @@
-import { print } from './ui.js';
+import { print } from '/js/ui.js';
 
 const ANSI_SOURCES = [
   "https://raw.githubusercontent.com/lwlsn/ascii-art/master/ansi-art/a-team.ans",
