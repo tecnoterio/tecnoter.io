@@ -17,7 +17,11 @@ dev:
 	@echo "Starting dev environment... (Ctrl+C to stop both)"
 	(trap 'kill 0' SIGINT; \
 	 cargo watch -C shell_wasm -s "wasm-pack build --target web --out-dir ../themes/tecnoter.io/static/js/wasm" & \
-	 hugo server -D --disableFastRender --printI18nWarnings --logLevel debug)
+	 hugo server -D --disableFastRender --printI18nWarnings --logLevel debug & \
+	 HUGO_PID=$$!; \
+	 sleep 3; \
+	 xdg-open http://localhost:1313 2>/dev/null || open http://localhost:1313 2>/dev/null || true; \
+	 wait $$HUGO_PID)
 
 serve: build-wasm
 	hugo server -D --disableFastRender --printI18nWarnings --logLevel debug
