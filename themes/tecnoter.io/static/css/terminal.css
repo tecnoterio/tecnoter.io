@@ -38,7 +38,8 @@ body::after {
 
 body.mode-terminal {
   background: #050605 !important;
-  color: #00ff66;
+  color: #ffb000;
+  text-shadow: 0 0 10px rgba(255, 176, 0, 0.5);
   animation: flicker 0.15s infinite;
 }
 
@@ -59,7 +60,7 @@ body.mode-terminal {
   display: none;
   font-family: 'VT323', monospace;
   font-size: 21px;
-  text-shadow: 0 0 5px rgba(0, 255, 102, 0.4);
+  text-shadow: 0 0 5px rgba(255, 176, 0, 0.4);
 }
 
 /* OSS Version Indicator */
@@ -69,7 +70,7 @@ body.mode-terminal {
   top: 75px;
   right: 170px;
   font-size: 10px;
-  color: #00ff66;
+  color: #ffb000;
   opacity: 0.4;
   letter-spacing: 1px;
   pointer-events: none;
@@ -99,8 +100,8 @@ body.mode-terminal #low-tech-hub { display: none; }
 /* INPUT & OUTPUT */
 #output, #input-line {
   max-width: 80ch;
-  margin: 0 auto;
-  padding: 0 20px;
+  margin: 0;
+  padding: 0 10px;
 }
 
 #input-line { 
@@ -110,7 +111,7 @@ body.mode-terminal #low-tech-hub { display: none; }
 }
 
 #prompt { 
-  color: #00ff66;
+  color: #ffb000;
   margin-right: 8px;
   white-space: nowrap;
 }
@@ -118,7 +119,7 @@ body.mode-terminal #low-tech-hub { display: none; }
 input {
   background: transparent;
   border: none;
-  color: #00ff66;
+  color: #ffb000;
   font-family: 'VT323', monospace;
   font-size: 1em;
   outline: none;
@@ -130,7 +131,7 @@ input {
 #cursor {
   width: 1ch;
   height: 1.2em;
-  background: #00ff66;
+  background: #ffb000;
   display: inline-block;
   visibility: hidden;
   margin-left: 0;
@@ -142,7 +143,7 @@ input:focus ~ #cursor {
 }
 
 #suggestion {
-  color: #00ff66;
+  color: #ffb000;
   opacity: 0.3;
   pointer-events: none;
   margin-left: 2px;
@@ -192,8 +193,8 @@ input:focus ~ #cursor {
 .control-knob::after { content: ""; position: absolute; top: 2px; left: 10px; width: 2px; height: 6px; background: #444; }
 .control-knob.active { border-color: #00ff66; transform: rotate(45deg); }
 
-.power-lamp { width: 10px; height: 10px; border-radius: 50%; background: #003300; }
-body.mode-terminal .power-lamp { background: #00ff66; box-shadow: 0 0 8px #00ff66; }
+.power-lamp { width: 10px; height: 10px; border-radius: 50%; background: #332200; }
+body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 8px #ffb000; }
 
 .uplink-lamp { width: 10px; height: 10px; border-radius: 50%; background: #330000; }
 .uplink-lamp.online { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; animation: pulse-glow 2s infinite; }
@@ -222,7 +223,7 @@ body.mode-terminal .power-lamp { background: #00ff66; box-shadow: 0 0 8px #00ff6
   content: " ";
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100px;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 255, 102, 0.05) 50%, transparent 100%);
+  background: linear-gradient(to bottom, transparent 0%, rgba(255, 176, 0, 0.05) 50%, transparent 100%);
   animation: scanline-roll 10s linear infinite;
 }
 
@@ -233,7 +234,7 @@ body.mode-terminal .power-lamp { background: #00ff66; box-shadow: 0 0 8px #00ff6
 @keyframes pulse-glow { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
 
 /* HUB CONTENT */
-.hub-wisdom { margin-bottom: 20px; color: #00ff66; opacity: 0.8; font-style: italic; font-family: 'VT323', monospace !important; }
+.hub-wisdom { margin-bottom: 20px; color: #ffb000; opacity: 0.8; font-style: italic; font-family: 'VT323', monospace !important; }
 
 .hub-header { 
   display: flex; 
@@ -280,11 +281,11 @@ body.mode-terminal .power-lamp { background: #00ff66; box-shadow: 0 0 8px #00ff6
   transform: translateX(5px);
 }
 .hub-post-item { border-left: 2px solid #333; padding-left: 15px; margin-bottom: 20px; }
-.mode-revert { background: #1a1c1a; color: #00ff66; border: 1px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; transition: all 0.2s; }
-.mode-revert:hover { background: #00ff66; color: #000; }
+.mode-revert { background: #1a1c1a; color: #ffb000; border: 1px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; transition: all 0.2s; }
+.mode-revert:hover { background: #ffb000; color: #000; }
 
 /* MISC */
-.ps1-user { color: #5ff; font-weight: bold; }
-.ps1-path { color: #ff5; }
+.ps1-user { color: #ffaa00; font-weight: bold; }
+.ps1-path { color: #ffcc44; }
 .bezel-logo { position: fixed; bottom: 5px; right: 145px; height: 50px; z-index: 2000; filter: sepia(1) saturate(5) brightness(0.8); }
 .bezel-logo img { height: 100%; width: auto; }
