@@ -36,6 +36,10 @@ theme = "tecnoter.io"
   mediaType = "application/json"
   rel = "searchindex"
 
+[mediaTypes]
+  [mediaTypes."application/wasm"]
+    suffixes = ["wasm"]
+
 [taxonomies]
   tag = "tags"
   category = "categories"
