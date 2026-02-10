@@ -512,7 +512,7 @@ body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 6px #ffb00
 .nav-group { display: flex; flex-direction: column; gap: 10px; }
 
 .hub-link, .retro-btn {
-  display: inline-block;
+  display: block;
   padding: 10px 20px;
   background: #1a1c1a;
   color: #ffb000;
@@ -557,6 +557,9 @@ body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 6px #ffb00
   text-decoration: none;
   position: relative;
 }
+
+/* Hub footer nav - single column fallback links */
+.hub-footer-nav { display: flex; flex-direction: column; gap: 20px; }
 
 .hub-link-external:hover {
   background: #ffb000;
