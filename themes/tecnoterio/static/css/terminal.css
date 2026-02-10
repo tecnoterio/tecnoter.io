@@ -504,8 +504,10 @@ body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 6px #ffb00
 
 .hub-main { 
   display: grid; 
-  grid-template-columns: 1fr 1.6fr; /* Two columns as requested */
+  grid-template-columns: minmax(0, 1fr) 1.6fr; 
   gap: 40px; 
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .hub-left { display: flex; flex-direction: column; }
