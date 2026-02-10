@@ -1,8 +1,8 @@
-baseURL = 'https://tecnoter.io/'
+baseURL = 'https://tecnoterio/'
 languageCode = 'en-us'
-title = 'tecnoter.io'
+title = 'tecnoterio'
 uglyURLs = false
-theme = "tecnoter.io"
+theme = "tecnoterio"
 
 [params]
   defaultMode = "terminal"
@@ -18,13 +18,13 @@ theme = "tecnoter.io"
     url = "https://twitter.com/tecnoter"
   [[params.social]]
     name = "bluesky"
-    url = "https://bsky.app/profile/tecnoter.io"
+    url = "https://bsky.app/profile/tecnoterio"
 
   [params.systemInfo]
     uptime = "42 days, 13:07"
     loadAverage = "0.42, 0.38, 0.45"
     motdSuggestion = "Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit."
-    nodeName = "tecnoter.io node 1"
+    nodeName = "tecnoterio node 1"
 
 [outputs]
   home = ["HTML", "JSON", "SearchIndex", "RSS"]
