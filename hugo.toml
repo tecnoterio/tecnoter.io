@@ -1,0 +1,61 @@
+baseURL = 'https://tecnoterio/'
+languageCode = 'en-us'
+title = 'tecnoterio'
+uglyURLs = false
+theme = "tecnoterio"
+
+[params]
+  defaultMode = "terminal"
+  description = "Electronic Art, Web3, & Low-tech Engineering."
+  author = "tecnoter"
+  images = ["/assets/tt_logo_hor.svg"]
+
+  [[params.social]]
+    name = "github"
+    url = "https://github.com/tecnoter"
+  [[params.social]]
+    name = "twitter"
+    url = "https://twitter.com/tecnoter"
+  [[params.social]]
+    name = "bluesky"
+    url = "https://bsky.app/profile/tecnoterio"
+
+  [params.systemInfo]
+    uptime = "42 days, 13:07"
+    loadAverage = "0.42, 0.38, 0.45"
+    motdSuggestion = "Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit."
+    nodeName = "tecnoterio node 1"
+
+[outputs]
+  home = ["HTML", "JSON", "SearchIndex", "RSS"]
+  section = ["HTML", "JSON"]
+  page = ["HTML", "JSON"]
+
+[outputFormats.SearchIndex]
+  path = "/search"
+  mediaType = "application/json"
+  rel = "searchindex"
+
+[mediaTypes]
+  [mediaTypes."application/wasm"]
+    suffixes = ["wasm"]
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 0
+
+  [[menu.main]]
+    name = "Posts"
+    url = "/posts/"
+    weight = 1
+
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 2

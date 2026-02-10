@@ -1,0 +1,202 @@
+<div class="crt-roll"></div>
+<div class="crt-overlay"></div>
+
+<!-- PHYSICAL MONITOR CONTROLS -->
+<div class="hardware-controls">
+  <div class="control-group clickable-group" id="group-mode" title="Switch between CRT and HUB mode" role="button">
+    <div class="control-label">MODE</div>
+    <div class="control-switch mode-terminal" id="knob-mode">
+      <div class="switch-track">
+        <div class="switch-handle"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="control-group clickable-group" id="group-channels" title="Switch Channels" role="button">
+    <div class="control-label">CHANNELS</div>
+    <div class="control-dial" id="knob-channels" data-channels="1">
+      <div class="dial-indicator"></div>
+    </div>
+  </div>
+
+  <div class="control-group clickable-group" id="group-debug" title="Toggle System Logging" role="button">
+    <div class="control-label">LOGS</div>
+    <div class="control-switch" id="knob-debug">
+      <div class="switch-track">
+        <div class="switch-handle"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group clickable-group color-mode-control" id="group-color" title="Terminal Color Theme" role="button">
+    <div class="control-label">COLOR</div>
+    <div class="color-mode-selector">
+      <div class="color-mode-btn amber active" data-color="amber" title="Amber Mode"></div>
+      <div class="color-mode-btn green" data-color="green" title="Green Mode"></div>
+      <div class="color-mode-btn bw" data-color="bw" title="Black & White"></div>
+    </div>
+  </div>
+
+  <div class="lamps-cluster">
+    <div class="lamp-group">
+      <div class="control-label power-label">PWR</div>
+      <div class="power-lamp" id="lamp-power"></div>
+    </div>
+    <div class="lamp-group">
+      <div class="control-label link-label">LINK</div>
+      <div class="uplink-lamp" id="lamp-uplink" title="WASM System Core Status"></div>
+    </div>
+  </div>
+</div>
+
+<div class="bezel-logo clickable-group" id="logo-home" title="Go to Hub Home" role="button">
+  <img src="/assets/tt_logo_hor.svg" alt="tecnoter logo" id="logo-image">
+</div>
+<script>
+  // Update logo color based on terminal theme
+  function updateLogoColor(color) {
+    const logo = document.getElementById('logo-image');
+    if (!logo) return;
+    
+    let filter;
+    switch(color) {
+      case 'amber':
+        filter = 'sepia(100%) hue-rotate(20deg) saturate(180%) brightness(1.1)';
+        break;
+      case 'green':
+        filter = 'sepia(100%) hue-rotate(135deg) saturate(150%) brightness(1.1)';
+        break;
+      case 'bw':
+        filter = 'grayscale(100%) brightness(1.2)';
+        break;
+      default:
+        filter = 'sepia(100%) hue-rotate(20deg) saturate(180%) brightness(1.1)';
+    }
+    logo.style.filter = filter;
+    console.log('Logo filter set to:', filter);
+  }
+  
+  // Update hub logo color
+  function updateHubLogoColor(color) {
+    const logo = document.getElementById('logo-image-hub');
+    if (!logo) return;
+    
+    let filter;
+    switch(color) {
+      case 'amber':
+        filter = 'sepia(100%) hue-rotate(20deg) saturate(180%) brightness(1.1)';
+        break;
+      case 'green':
+        filter = 'sepia(100%) hue-rotate(135deg) saturate(150%) brightness(1.1)';
+        break;
+      case 'bw':
+        filter = 'grayscale(100%) brightness(1.2)';
+        break;
+      default:
+        filter = 'sepia(100%) hue-rotate(20deg) saturate(180%) brightness(1.1)';
+    }
+    logo.style.filter = filter;
+    console.log('Hub logo filter set to:', filter);
+  }
+  
+  document.querySelectorAll('.color-mode-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const color = btn.dataset.color;
+      if (!color) return;
+      document.querySelectorAll('.color-mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.body.classList.remove('mode-amber','mode-green','mode-bw');
+      document.body.classList.add(`mode-${color}`);
+      updateLogoColor(color);
+      updateHubLogoColor(color);
+      console.log('Color switched to: ' + color);
+    });
+  });
+  
+  // Initialize logo color on page load
+  const initialColor = document.querySelector('.color-mode-btn.active')?.dataset.color || 'amber';
+  updateLogoColor(initialColor);
+  updateHubLogoColor(initialColor);
+  
+  // Clear sessionStorage to ensure fresh start
+  sessionStorage.removeItem('tecnoter_mode');
+  
+  // Set initial terminal mode state based on current page and stored preference
+  const storedMode = sessionStorage.getItem('tecnoter_mode');
+  const currentHash = window.location.hash.substring(1); // Remove # symbol
+  const isIndexPage = currentHash === '' || currentHash === 'index';
+  // Only show terminal by default on the root page (/), not on subpages like /pages/bio/
+  const isRootPage = window.location.pathname === '/' || window.location.pathname === '';
+  
+  if (storedMode === 'HUB') {
+    document.body.classList.remove('mode-terminal');
+  } else if (storedMode === 'TERMINAL') {
+    document.body.classList.add('mode-terminal');
+  } else {
+    // Default: show terminal only on root page, hub on other pages
+    if (isRootPage) {
+      document.body.classList.add('mode-terminal');
+      console.log('Setting TERMINAL mode as default on root');
+    } else {
+      document.body.classList.remove('mode-terminal');
+      console.log('Setting HUB mode as default on subpage');
+    }
+  }
+  
+  // Synchronously update state.systemMode if possible
+  if (window.terminalSystem?.state) {
+    window.terminalSystem.state.systemMode = document.body.classList.contains('mode-terminal') ? 'TERMINAL' : 'HUB';
+  } else {
+    // Poll until terminalSystem is available, then update immediately
+    let attempts = 0;
+    const ensureTerminalMode = () => {
+      if (window.terminalSystem?.state || attempts++ > 50) {
+        if (window.terminalSystem?.state) {
+          // Only set TERMINAL mode on root page; other pages should use HUB
+          if (isRootPage) {
+            window.terminalSystem.state.systemMode = 'TERMINAL';
+          } else {
+            window.terminalSystem.state.systemMode = 'HUB';
+          }
+        }
+      } else {
+        // Use requestAnimationFrame for faster polling than setTimeout
+        requestAnimationFrame(ensureTerminalMode);
+      }
+    };
+    requestAnimationFrame(ensureTerminalMode);
+  }
+  // MODE switch - handled by listeners.js toggleMode
+  
+  // Toggle DEBUG switch
+  const debugKnob = document.getElementById('knob-debug');
+  if (debugKnob) {
+    debugKnob.addEventListener('click', (e) => {
+      e.stopPropagation();
+      debugKnob.classList.toggle('active');
+    });
+  }
+  
+  // Dial interaction for channels
+  const channelsKnob = document.getElementById('knob-channels');
+  if (channelsKnob) {
+    channelsKnob.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const current = parseInt(channelsKnob.dataset.channels) || 1;
+      const next = (current % 4) + 1;
+      channelsKnob.dataset.channels = next;
+      console.log('Channel switched to: ' + next);
+    });
+  }
+</script>
+
+<style>
+.mode-terminal .control-label:not(.power-label):not(.link-label) {
+  color: #ffb000;
+  text-shadow: 0 0 8px #ffb000;
+  animation: pulse-glow 2s infinite;
+}
+.mode-terminal .power-label { color: red !important; font-weight: bold; }
+.mode-terminal .link-label { color: blue; font-weight: bold; }
+</style>

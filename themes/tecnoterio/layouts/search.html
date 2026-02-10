@@ -1,0 +1,15 @@
+{{ define "main" }}
+<div class="search-results">
+  <h1>Search Results</h1>
+  {{ $results := .Site.SearchIndex.Keywords .Params.q }}
+  {{ if $results }}
+    <ul>
+      {{ range $results }}
+        <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
+  {{ else }}
+    <p>No results found for "{{ .Params.q }}".</p>
+  {{ end }}
+</div>
+{{ end }}
