@@ -76,12 +76,7 @@
 
     <footer class="hub-footer">
       <div class="hub-wisdom" style="margin-bottom: 10px; color: #00ff66; opacity: 0.7; font-style: italic;">
-        {{ $fortunes := .Site.Data.fortunes.fortunes }}
-        {{ $count := len $fortunes }}
-        {{ if gt $count 0 }}
-        {{ $first := index $fortunes 0 }}
-        {{ $first.text }}
-        {{ end }}
+        {{ "Simplicity is the soul of efficiency." }}
       </div>
       <span>SECURE PLAIN-TEXT HUB ACCESS v2.5 (HUGO-FALLBACK)</span>
       <button class="mode-revert" id="revert-terminal">RE-ENGAGE CRT TERMINAL</button>
