@@ -508,6 +508,9 @@ body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 6px #ffb00
   gap: 40px; 
 }
 
+.hub-nav { display: flex; flex-direction: column; }
+.nav-group { display: flex; flex-direction: column; gap: 10px; }
+
 .hub-link, .retro-btn {
   display: inline-block;
   padding: 10px 20px;
