@@ -1,0 +1,23 @@
+[bio]
+title = "Company Biography"
+content = "Tecnoter.io was founded in 2020 to redefine digital infrastructure through minimalist engineering, retro-functional design, and decentralized technologies. We build high-performance systems that honor the past while pioneering the future of Web3 and low-tech solutions."
+
+[skills]
+title = "Technical Deck"
+content = "Our expertise spans across: System Architecture, High-Availability Cloud Infrastructure, Hugo/Static Site Engineering, and Low-Level Performance Optimization."
+
+[contact]
+title = "Contact Protocol"
+content = "Primary Node: monitor.tecnoter.io\nEmail: contact@tecnoter.io\nSecure Comms: PGP-Key ID [REDACTED]"
+
+[vision]
+title = "Corporate Vision"
+content = "To bridge the gap between the tactile history of computing and the scalable future of the decentralized web."
+
+[services]
+title = "Our Services"
+content = "1. 24/7 Managed Nodes\n2. Real-time Monitoring Systems\n3. High-Performance Static Deployments\n4. Legacy System Integration"
+
+[team]
+title = "The Crew"
+content = "SysOp Alpha: Lead Architect\nAdmin Beta: Network Specialist\nGuest Node: Exploration Protocol Activated"
