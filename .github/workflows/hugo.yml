@@ -6,7 +6,7 @@ on:
   push:
     branches: ["main"]
 
-  # Runs on pull requests to main branch
+  # Runs on pull requests - build only, no deploy
   pull_request:
     branches: ["main"]
 
@@ -31,7 +31,7 @@ defaults:
     shell: bash
 
 jobs:
-  # Build job
+  # Build job - runs on both PRs and pushes
   build:
     runs-on: ubuntu-latest
     env:
@@ -81,8 +81,9 @@ jobs:
         with:
           path: ./public
 
-  # Deployment job
+  # Deployment job - only runs on pushes to main
   deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
