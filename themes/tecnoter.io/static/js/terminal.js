@@ -257,66 +257,68 @@ function initTerminal() {
   }, 10000);
 
   // Dynamic imports inside init function to break early circular dependency chains
-  Promise.all([
-    import('/js/ui.js'),
-    import('/js/commands.js'),
-    import('/js/listeners.js')
-  ]).then(([uiModule, commandsModule, listenersModule]) => {
-    // Capture from UI
-    initUIElements = uiModule.initUIElements;
-    print = uiModule.print;
-    updatePrompt = uiModule.updatePrompt;
-    getPS1 = uiModule.getPS1;
-    
-    // Capture from Commands
-    run = commandsModule.run;
-    
-    // Capture from Listeners
-    initListeners = listenersModule.initListeners;
+  // First fetch index.json to populate state, then load modules
+  fetch("/index.json")
+    .then(r => r.json())
+    .then(data => {
+      state.posts = data.posts || [];
+      state.pages = data.pages || [];
+      state.socials = data.socials || window.siteSocial || [];
+      state.fortunes = data.fortunes || window.siteFortunes || [];
+      state.systemInfo = data.systemInfo || state.systemInfo;
+      state.systemInfo.currentDate = new Date().toDateString();
+      
+      // Update virtual fs for completions if needed
+      fs["/posts"] = state.posts.map(p => p.slug);
+      fs["/pages"] = state.pages.map(p => p.slug);
+      
+      const allTags = [...new Set([...state.posts.flatMap(p => p.tags || []), ...state.pages.flatMap(p => p.tags || [])])];
+      const allCats = [...new Set([...state.posts.flatMap(p => p.categories || []), ...state.pages.flatMap(p => p.categories || [])])];
+      
+      fs["/tags"] = allTags;
+      fs["/categories"] = allCats;
+      fs["/"] = ["posts", "pages", "tags", "categories", ...state.pages.map(p => p.slug)];
+      
+      allTags.forEach(tag => {
+          fs[`/tags/${tag}`] = [
+              ...state.posts.filter(p => p.tags?.includes(tag)).map(p => p.slug),
+              ...state.pages.filter(p => p.tags?.includes(tag)).map(p => p.slug)
+          ];
+      });
+      
+      allCats.forEach(cat => {
+          fs[`/categories/${cat}`] = [
+              ...state.posts.filter(p => p.categories?.includes(cat)).map(p => p.slug),
+              ...state.pages.filter(p => p.categories?.includes(cat)).map(p => p.slug)
+          ];
+      });
+      
+      // Now load the module dependencies
+      Promise.all([
+        import('/js/ui.js'),
+        import('/js/commands.js'),
+        import('/js/listeners.js')
+      ]).then(([uiModule, commandsModule, listenersModule]) => {
+        // Capture from UI
+        initUIElements = uiModule.initUIElements;
+        print = uiModule.print;
+        updatePrompt = uiModule.updatePrompt;
+        getPS1 = uiModule.getPS1;
+        
+        // Capture from Commands
+        run = commandsModule.run;
+        
+        // Capture from Listeners
+        initListeners = listenersModule.initListeners;
 
-    // Initialize UI
-    if (!initUIElements()) {
-       console.warn("UI elements not found during initTerminal");
-    }
-    
-    // Sync references
-    input = uiModule.input;
-    output = uiModule.output;
-
-    fetch("/index.json")
-      .then(r => r.json())
-      .then(data => {
-        state.posts = data.posts || [];
-        state.pages = data.pages || [];
-        state.socials = data.socials || window.siteSocial || [];
-        state.fortunes = data.fortunes || window.siteFortunes || [];
-        state.systemInfo = data.systemInfo || state.systemInfo;
-        state.systemInfo.currentDate = new Date().toDateString();
+        // Initialize UI
+        if (!initUIElements()) {
+           console.warn("UI elements not found during initTerminal");
+        }
         
-        // Update virtual fs for completions if needed
-        fs["/posts"] = state.posts.map(p => p.slug);
-        fs["/pages"] = state.pages.map(p => p.slug);
-        
-        const allTags = [...new Set([...state.posts.flatMap(p => p.tags || []), ...state.pages.flatMap(p => p.tags || [])])];
-        const allCats = [...new Set([...state.posts.flatMap(p => p.categories || []), ...state.pages.flatMap(p => p.categories || [])])];
-        
-        fs["/tags"] = allTags;
-        fs["/categories"] = allCats;
-        fs["/"] = ["posts", "pages", "tags", "categories", ...state.pages.map(p => p.slug)];
-        
-        allTags.forEach(tag => {
-            fs[`/tags/${tag}`] = [
-                ...state.posts.filter(p => p.tags?.includes(tag)).map(p => p.slug),
-                ...state.pages.filter(p => p.tags?.includes(tag)).map(p => p.slug)
-            ];
-        });
-        
-        allCats.forEach(cat => {
-            fs[`/categories/${cat}`] = [
-                ...state.posts.filter(p => p.categories?.includes(cat)).map(p => p.slug),
-                ...state.pages.filter(p => p.categories?.includes(cat)).map(p => p.slug)
-            ];
-        });
+        // Sync references
+        input = uiModule.input;
+        output = uiModule.output;
         
         initListeners({ onLogout: logout, onLogin: handleLogin });
         
@@ -327,15 +329,38 @@ function initTerminal() {
             // In HUB mode or internal page, just ready the gateway
             print("KERNEL LOADED (JS-WASM GATEWAY ONLINE)", "bbs-footer");
         }
-      })
-      .catch((err) => {
-        console.error("Error loading system content:", err);
+      }).catch(err => {
+        console.error("Module loading sequence failed:", err);
+      });
+    })
+.catch((err) => {
+      console.error("Error loading system content:", err);
+      // Load modules even if fetch fails
+      Promise.all([
+        import('/js/ui.js'),
+        import('/js/commands.js'),
+        import('/js/listeners.js')
+      ]).then(([uiModule, commandsModule, listenersModule]) => {
+        initUIElements = uiModule.initUIElements;
+        print = uiModule.print;
+        updatePrompt = uiModule.updatePrompt;
+        getPS1 = uiModule.getPS1;
+        run = commandsModule.run;
+        initListeners = listenersModule.initListeners;
+
+        if (!initUIElements()) {
+           console.warn("UI elements not found during initTerminal");
+        }
+        
+        input = uiModule.input;
+        output = uiModule.output;
+        
         initListeners({ onLogout: logout, onLogin: handleLogin });
         if (state.systemMode === 'TERMINAL') boot();
+      }).catch(err => {
+        console.error("Module loading sequence failed:", err);
       });
-  }).catch(err => {
-    console.error("Module loading sequence failed:", err);
-  });
+    });
 }
 
 window.terminalBoot = boot;

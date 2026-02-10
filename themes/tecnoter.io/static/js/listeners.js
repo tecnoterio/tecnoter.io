@@ -97,9 +97,10 @@ export function initListeners(handlers) {
     const hub = document.getElementById('low-tech-hub');
     const knobMode = document.getElementById('knob-mode');
 
-    // If we are on a single post page and trying to engage terminal, 
-    // we should redirect back to index with the hash so terminal can show the post.
-    if (window.isInternalPage && mode === 'TERMINAL') {
+    // If we are on a post page (not pages) and trying to engage terminal, 
+    // redirect to index with hash so terminal can show the post.
+    // Pages should stay in hub mode without hash redirects.
+    if (window.isInternalPage && mode === 'TERMINAL' && window.location.pathname.includes('/posts/')) {
         const slug = window.location.pathname.split('/').filter(Boolean).pop();
         window.location.href = `/#${slug}`;
         return;
@@ -204,7 +205,9 @@ export function initListeners(handlers) {
   
   document.getElementById('revert-terminal')?.addEventListener('click', () => setSystemMode('TERMINAL'));
 
-  setTimeout(() => setSystemMode(state.systemMode), 100);
+  setTimeout(() => {
+    setSystemMode(state.systemMode);
+  }, 500);
 
   document.addEventListener("keydown", e => {
     if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'm') {

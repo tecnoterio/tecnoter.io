@@ -43,6 +43,18 @@ body.mode-terminal {
   animation: flicker 0.15s infinite;
 }
 
+body.mode-green.mode-terminal {
+  background: #050605 !important;
+  color: #00ff66;
+  text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+}
+
+body.mode-bw.mode-terminal {
+  background: #000 !important;
+  color: #fff;
+  text-shadow: none;
+}
+
 /* SCREEN AREA */
 #terminal, #low-tech-hub {
   position: fixed;
@@ -116,6 +128,9 @@ body.mode-terminal #low-tech-hub { display: none; }
   white-space: nowrap;
 }
 
+body.mode-green #prompt { color: #00ff66; }
+body.mode-bw #prompt { color: #fff; }
+
 input {
   background: transparent;
   border: none;
@@ -127,6 +142,9 @@ input {
   width: 0; /* JS will set this in ch */
   caret-color: transparent;
 }
+
+body.mode-green input { color: #00ff66; }
+body.mode-bw input { color: #fff; }
 
 #cursor {
   width: 1ch;
@@ -176,6 +194,14 @@ input:focus ~ #cursor {
   cursor: pointer;
 }
 
+.control-group.color-mode-control,
+.control-group#group-channels,
+.control-group#group-mode,
+.control-group#group-debug {
+  flex-direction: column;
+  gap: 4px;
+}
+
 .lamps-cluster {
   display: flex;
   flex-direction: column;
@@ -188,16 +214,236 @@ input:focus ~ #cursor {
 }
 
 .lamp-group { display: flex; justify-content: space-between; width: 100%; align-items: center; }
-.control-label { font-size: 10px; color: #444; font-weight: bold; font-family: monospace; }
+.control-label { font-size: 14px; color: #444; font-weight: bold; font-family: monospace; }
 .control-knob { width: 22px; height: 22px; background: #111; border-radius: 50%; border: 2px solid #222; position: relative; }
 .control-knob::after { content: ""; position: absolute; top: 2px; left: 10px; width: 2px; height: 6px; background: #444; }
 .control-knob.active { border-color: #00ff66; transform: rotate(45deg); }
 
-.power-lamp { width: 10px; height: 10px; border-radius: 50%; background: #332200; }
-body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 8px #ffb000; }
+.power-lamp { width: 12px; height: 12px; border-radius: 50%; background: #332200; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5); }
+body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 6px #ffb000, inset 1px 1px 2px rgba(0,0,0,0.3); }
+.power-lamp.on { background: #ffb000; box-shadow: 0 0 8px #ffb000, 0 0 12px #ffb000, inset 1px 1px 2px rgba(0,0,0,0.3); }
 
-.uplink-lamp { width: 10px; height: 10px; border-radius: 50%; background: #330000; }
-.uplink-lamp.online { background: #ffcc00; box-shadow: 0 0 10px #ffcc00; animation: pulse-glow 2s infinite; }
+.uplink-lamp { width: 12px; height: 12px; border-radius: 50%; background: #330000; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5); }
+.uplink-lamp.online { background: #ffcc00; box-shadow: 0 0 8px #ffcc00, 0 0 12px #ffcc00, inset 1px 1px 2px rgba(0,0,0,0.3); }
+
+/* RETRO TOGGLE SWITCH - TV Style */
+.control-switch {
+  width: 38px;
+  height: 20px;
+  background: #111;
+  border: 2px solid #444;
+  border-radius: 3px;
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 2px 2px 4px rgba(0,0,0,0.5);
+  transition: all 0.15s ease;
+}
+
+.control-switch .switch-track {
+  pointer-events: none;
+}
+
+.control-switch .switch-handle {
+  pointer-events: none;
+}
+
+.switch-track {
+  width: 100%;
+  height: 100%;
+  background: #080808;
+  border-radius: 2px;
+  position: relative;
+  border: 1px solid #222;
+}
+
+.switch-handle {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #555, #333);
+  border-radius: 2px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.6), inset 1px 1px 2px rgba(255,255,255,0.2);
+  transition: all 0.15s ease;
+}
+
+.control-switch.active {
+  border-color: #ffb000;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 0 0 12px rgba(255, 176, 0, 0.4);
+}
+
+.control-switch.active .switch-handle {
+  background: linear-gradient(135deg, #ffd700, #ffb000);
+  left: 20px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.6), 0 0 8px rgba(255, 176, 0, 0.6), inset 1px 1px 2px rgba(255,255,255,0.3);
+}
+
+/* RETRO ROTARY DIAL */
+.control-dial {
+  width: 40px;
+  height: 40px;
+  background: #111;
+  border: 2px solid #444;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 2px 2px 5px rgba(0,0,0,0.5);
+  transition: all 0.15s ease;
+}
+
+.dial-indicator {
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 2px rgba(0,0,0,0.3);
+  transition: all 0.15s ease;
+}
+
+.control-dial.active {
+  border-color: #ffb000;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255, 176, 0, 0.4);
+}
+
+.control-dial.active .dial-indicator {
+  background: #ffb000;
+  box-shadow: 0 0 8px #ffb000, inset 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Add numbers around the dial for authenticity */
+.control-dial::before {
+  content: "1";
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  color: #666;
+  font-family: monospace;
+  pointer-events: none;
+}
+
+.control-dial::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #333, transparent);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* COLOR MODE SELECTOR */
+.color-mode-selector {
+  display: flex;
+  gap: 4px;
+}
+
+.color-mode-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid #333;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.color-mode-btn.amber {
+  background: #ffb000;
+  border-color: #ffb000;
+}
+
+.color-mode-btn.green {
+  background: #00ff66;
+  border-color: #00ff66;
+}
+
+.color-mode-btn.bw {
+  background: #888;
+  border-color: #888;
+}
+
+.color-mode-btn.active {
+  border-color: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.8);
+  transform: scale(1.1);
+}
+
+.color-mode-btn:hover {
+  transform: scale(1.15);
+}
+
+/* CLICKABLE GROUP */
+.clickable-group {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable-group:hover {
+  filter: brightness(1.15);
+}
+
+.clickable-group:active {
+  filter: brightness(0.85);
+}
+
+/* Prevent clickable-group effects from interfering with control elements */
+.clickable-group .control-switch,
+.clickable-group .control-dial,
+.clickable-group .color-mode-btn {
+  transition: none;
+}
+
+.clickable-group:hover .control-switch,
+.clickable-group:hover .control-dial,
+.clickable-group:hover .color-mode-btn {
+  filter: none;
+}
+
+.clickable-group:active .control-switch,
+.clickable-group:active .control-dial,
+.clickable-group:active .color-mode-btn {
+  filter: none;
+}
+
+/* RETRO BUTTON */
+.btn-retro {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+.btn-retro:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.btn-retro:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(255, 176, 0, 0.2);
+}
 
 /* CRT EFFECTS */
 .crt-overlay {
@@ -262,27 +508,97 @@ body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 8px #ffb00
   gap: 40px; 
 }
 
-.hub-link { 
-  color: #aaa; 
-  text-decoration: none; 
-  display: block; 
-  padding: 8px 12px; 
-  background: #181818;
+.hub-link, .retro-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
   border-radius: 4px;
-  margin-bottom: 5px;
-  font-size: 0.9rem;
-  transition: all 0.2s;
   text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
 }
 
-.hub-link:hover {
-  background: #222;
+.hub-link:hover, .retro-btn:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.hub-link:active, .retro-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(255, 176, 0, 0.2);
+}
+
+/* External links should also look retro */
+.hub-link-external {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+.hub-link-external:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.hub-post-link {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.hub-post-link:hover {
   color: #fff;
-  transform: translateX(5px);
+  text-decoration: underline;
 }
 .hub-post-item { border-left: 2px solid #333; padding-left: 15px; margin-bottom: 20px; }
-.mode-revert { background: #1a1c1a; color: #ffb000; border: 1px solid #333; padding: 8px 20px; border-radius: 20px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; transition: all 0.2s; }
-.mode-revert:hover { background: #ffb000; color: #000; }
+.mode-revert, .retro-btn {
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.mode-revert:hover, .retro-btn:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.mode-revert:active, .retro-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(255, 176, 0, 0.2);
+}
 
 /* MISC */
 .ps1-user { color: #ffaa00; font-weight: bold; }

@@ -6,7 +6,6 @@ const isDebugMode = urlParams.has('debug') || window.location.hash.includes('deb
 window.DEBUG_MODE = isDebugMode;
 
 // Setup objects for module context
-const isInternal = window.location.pathname.includes('/posts/') || (window.location.pathname.length > 1 && window.location.pathname !== "/");
 const savedMode = sessionStorage.getItem('tecnoter_mode');
 const defaultHistory = [
   "help",
@@ -48,7 +47,7 @@ export const state = {
   currentPostIndex: -1,
   mailRecipient: null,
   returnState: "PROMPT",
-  systemMode: savedMode || (isInternal ? "HUB" : "TERMINAL"), // Persistence > Context > Default
+  systemMode: savedMode || (getIsInternal() ? "HUB" : "TERMINAL"), // Persistence > Context > Default
   booted: false,
   isAuthenticated: false,
   debugMode: false
@@ -74,6 +73,8 @@ export function checkCompatibility() {
   const hasCSSFilters = CSS.supports('filter', 'blur(1px)');
   const isLargeScreen = window.innerWidth > 600;
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  
+  console.log('checkCompatibility: hasCSSFilters=', hasCSSFilters, 'isLargeScreen=', isLargeScreen, 'isTouchDevice=', isTouchDevice);
 
   // If mobile or no CSS filter support, default to HUB mode
   if (!hasCSSFilters || !isLargeScreen || isTouchDevice) {
@@ -85,13 +86,21 @@ export function checkCompatibility() {
   return true;
 }
 
+// Helper function to determine if we're on an internal page (like /posts/)
+function getIsInternal() {
+  const hashPath = window.location.hash.substring(1);
+  return window.location.pathname.includes('/posts/') || (window.location.pathname.length > 1 && window.location.pathname !== "/") || (hashPath !== '' && hashPath !== 'index');
+}
+
 // Wasm integration
 export let wasm = null;
 
 export async function initWasm() {
   try {
     const module = await import('/js/wasm/tecnoter_shell.js');
+    // Call default to initialize WASM, which sets the internal wasm variable
     await module.default();
+    // Use the exports directly - process_input is the main function
     wasm = module;
     console.log("Wasm Shell initialized");
   } catch (e) {
