@@ -12,10 +12,7 @@ theme = "tecnoterio"
 
   [[params.social]]
     name = "github"
-    url = "https://github.com/tecnoter"
-  [[params.social]]
-    name = "twitter"
-    url = "https://twitter.com/tecnoter"
+    url = "https://github.com/tecnoterio"
   [[params.social]]
     name = "bluesky"
     url = "https://bsky.app/profile/tecnoterio"
