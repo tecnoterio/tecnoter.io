@@ -4,6 +4,11 @@ title = 'tecnoterio'
 uglyURLs = false
 theme = "tecnoterio"
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
 [params]
   defaultMode = "terminal"
   description = "Electronic Art, Web3, & Low-tech Engineering."
@@ -12,19 +17,16 @@ theme = "tecnoterio"
 
   [[params.social]]
     name = "github"
-    url = "https://github.com/tecnoter"
-  [[params.social]]
-    name = "twitter"
-    url = "https://twitter.com/tecnoter"
+    url = "https://github.com/tecnoterio"
   [[params.social]]
     name = "bluesky"
     url = "https://bsky.app/profile/tecnoterio"
 
-  [params.systemInfo]
-    uptime = "42 days, 13:07"
-    loadAverage = "0.42, 0.38, 0.45"
-    motdSuggestion = "Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit."
-    nodeName = "tecnoterio node 1"
+[params.systemInfo]
+  uptime = "42 days, 13:07"
+  loadAverage = "0.42, 0.38, 0.45"
+  motdSuggestion = "Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit."
+  nodeName = "tecnoterio node 1"
 
 [outputs]
   home = ["HTML", "JSON", "SearchIndex", "RSS"]
@@ -59,3 +61,8 @@ theme = "tecnoterio"
     name = "Tags"
     url = "/tags/"
     weight = 2
+
+  [[menu.main]]
+    name = "Terminal"
+    url = "/terminal/"
+    weight = 3

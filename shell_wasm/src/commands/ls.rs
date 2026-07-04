@@ -1,7 +1,7 @@
 use crate::state::SystemState;
 use crate::fs;
 
-fn format_date(date_str: &str) -> String {
+pub fn format_date(date_str: &str) -> String {
     let parts: Vec<&str> = date_str.split('-').collect();
     if parts.len() < 3 { return date_str.to_string(); }
     
@@ -15,6 +15,17 @@ fn format_date(date_str: &str) -> String {
     let day = parts[2];
     
     format!("{} {} {}", month, day, year)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_format_date_basic() {
+        let result = format_date("2023-12-25");
+        assert_eq!(result, "Dec 25 2023");
+    }
 }
 
 pub fn handle(state: &SystemState, args: Vec<&str>) -> String {
@@ -62,6 +73,14 @@ pub fn handle(state: &SystemState, args: Vec<&str>) -> String {
             }
         }
 
+        if target_path == "/" {
+            files = vec![
+                "posts".to_string(),
+                "pages".to_string(),
+                "tags".to_string(),
+                "categories".to_string(),
+            ];
+        }
         if long_format {
             let mut output = String::new();
             for file in files {
