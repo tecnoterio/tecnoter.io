@@ -1,5 +1,26 @@
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
+# Hugo build output
+public/
+resources/_gen/
+
+# Rust/WASM build
+shell_wasm/target/
+shell_wasm/pkg/
+themes/tecnoter.io/static/js/wasm/
+themes/tecnoter.io/static/js/wasm/**
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Temp
+*.tmp
+temp/
