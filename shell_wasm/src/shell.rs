@@ -75,7 +75,7 @@ pub fn process_input(mut state: SystemState, input: &str) -> ProcessResult {
         return ProcessResult {
             lines: vec![],
             next_state: state,
-            handled: false,
+            handled: true,
         };
     }
 
@@ -446,7 +446,7 @@ pub fn process_input(mut state: SystemState, input: &str) -> ProcessResult {
         _ => ProcessResult {
             lines: vec![],
             next_state: state,
-            handled: false,
+            handled: true,
         }
     }
 }

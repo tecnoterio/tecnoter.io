@@ -42,6 +42,13 @@ pub struct Social {
     pub url: String,
 }
 
+#[derive(Serialize, Deserialize, Clone, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct Fortune {
+    #[serde(default)]
+    pub text: String,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct SystemInfo {
@@ -85,7 +92,7 @@ pub struct SystemState {
     #[serde(default)]
     pub socials: Vec<Social>,
     #[serde(default)]
-    pub fortunes: Vec<String>,
+    pub fortunes: Vec<Fortune>,
     #[serde(default)]
     pub system_info: SystemInfo,
     pub version: String,

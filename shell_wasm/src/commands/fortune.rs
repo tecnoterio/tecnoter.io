@@ -1,4 +1,4 @@
-use crate::state::SystemState;
+use crate::state::{SystemState, Fortune};
 use js_sys::Math;
 
 pub fn handle(state: &SystemState) -> String {
@@ -7,7 +7,7 @@ pub fn handle(state: &SystemState) -> String {
     }
 
     let idx = (Math::random() * state.fortunes.len() as f64).floor() as usize;
-    let fortune = state.fortunes.get(idx).cloned().unwrap_or_else(|| "Uplink silent.".to_string());
+    let fortune = state.fortunes.get(idx).cloned().unwrap_or_else(|| Fortune { text: "Uplink silent.".to_string() });
     
-    format!("\nNODE WISDOM: {}", fortune)
+    format!("\nNODE WISDOM: {}", fortune.text)
 }
