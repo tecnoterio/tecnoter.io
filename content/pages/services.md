@@ -1,9 +1,9 @@
----
-title: "Our Services"
-slug: "services"
-group: "directory"
-weight: 5
----
++++
+title = "Our Services"
+slug = "services"
+group = "directory"
+weight = 5
++++
 Tecnoter.io delivers enterprise-grade infrastructure solutions for the modern web. We specialize in building scalable, observable, and automated systems that empower teams to ship faster and operate with confidence.
 
 ## What We Do

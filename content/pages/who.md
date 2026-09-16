@@ -1,9 +1,9 @@
----
-title: "Online Users"
-slug: "who"
-group: "system"
-weight: 2
----
++++
+title = "Online Users"
+slug = "who"
+group = "system"
+weight = 2
++++
 NODE | USERNAME      | LOCATION       | ACTION
 -----|---------------|----------------|------------------
 01   | guest         | Local          | Reading Directory

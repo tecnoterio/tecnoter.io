@@ -1,9 +1,9 @@
----
-title: "Node Statistics"
-slug: "stats"
-group: "system"
-weight: 1
----
++++
+title = "Node Statistics"
+slug = "stats"
+group = "system"
+weight = 1
++++
 Node Name: tecnoter.io node 1
 Software: TT-BBS v2.0.26-LNX (Rust-Core)
 System Uptime: 42 days, 13 hours, 07 minutes
