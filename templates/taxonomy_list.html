@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+{% set base = get_env(name="TECNOTER_BASE", default="") %}
 <html>
 <head>
   <meta charset="utf-8">
   <title>{{ taxonomy }} | {{ config.title }}</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="{{ base }}/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/terminal.css">
+  <link rel="stylesheet" href="{{ base }}/css/terminal.css">
 </head>
 <body class="">
   {% include "partials/hardware.html" %}
@@ -16,6 +17,7 @@
   <script>
     window.isInternalPage = true;
   </script>
-  <script type="module" src="/js/terminal.js"></script>
+  window.SITE_BASE = "{{ base }}";
+  <script type="module" src="{{ base }}/js/terminal.js"></script>
 </body>
 </html>

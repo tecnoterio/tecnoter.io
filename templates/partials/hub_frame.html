@@ -1,7 +1,7 @@
 <div id="low-tech-hub" {% if current_path == "/" and config.extra.default_mode == "terminal" %}style="display: none;"{% endif %}>
   <div class="hub-frame">
     <header class="hub-header">
-      <img src="/assets/tt_logo_hor.svg" alt="tecnoter logo" id="logo-image-hub">
+      <img src="{{ base }}/assets/tt_logo_hor.svg" alt="tecnoter logo" id="logo-image-hub">
       <h1>TECNOTER NODE 1</h1>
     </header>
     
@@ -21,7 +21,7 @@
             {% for item in config.extra.system_nav %}
             <a href="{{ item.url }}" class="hub-link" data-cmd="{{ item.cmd }}">{{ item.title | upper }}</a>
             {% endfor %}
-            <a href="/posts/" class="hub-link" data-cmd="bulletins">NEWS FEED</a>
+            <a href="{{ base }}/posts/" class="hub-link" data-cmd="bulletins">NEWS FEED</a>
           </div>
           <div class="nav-group">
             <h3>SOCIAL</h3>

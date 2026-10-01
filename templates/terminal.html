@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+{% set base = get_env(name="TECNOTER_BASE", default="") %}
 <html>
 <head>
   <meta charset="utf-8">
   <title>Terminal | {{ config.title }}</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="{{ base }}/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/terminal.css">
+  <link rel="stylesheet" href="{{ base }}/css/terminal.css">
 </head>
 <body class="mode-terminal">
   <div id="terminal-page">
@@ -18,7 +19,7 @@
       <button class="cmd-btn" onclick="runCommand('whoami')">whoami</button>
       <button class="cmd-btn" onclick="runCommand('uptime')">uptime</button>
       <button class="cmd-btn" onclick="runCommand('fortune')">fortune</button>
-      <a class="cmd-btn" href="/">&laquo; BACK TO INDEX</a>
+      <a class="cmd-btn" href="{{ base }}/">&laquo; BACK TO INDEX</a>
     </div>
   </div>
 
@@ -36,6 +37,6 @@
     .cmd-btn:hover { background:#444; }
   </style>
 
-  <script type="module" src="/js/terminal-page.js"></script>
+  <script type="module" src="{{ base }}/js/terminal-page.js"></script>
 </body>
 </html>

@@ -15,6 +15,7 @@ until the new baseline is accepted.
 """
 
 import json
+import os
 import pathlib
 import shutil
 import sys
@@ -24,6 +25,21 @@ UPDATE = "--update" in sys.argv
 GOLDEN = SITE / "tests" / "golden"
 
 failures: list[str] = []
+
+# PR previews prefix every URL with the subfolder they are published under.
+# Strip it before comparing, so the check verifies content and formatting
+# rather than the deployment path.
+BASE = os.environ.get("TECNOTER_BASE", "").rstrip("/")
+
+
+def strip_base(value):
+    if isinstance(value, str):
+        return value.replace(BASE, "", 1) if BASE else value
+    if isinstance(value, list):
+        return [strip_base(item) for item in value]
+    if isinstance(value, dict):
+        return {key: strip_base(item) for key, item in value.items()}
+    return value
 
 
 def load(path: pathlib.Path):
@@ -35,7 +51,7 @@ def check_index() -> None:
     if not theirs.is_file():
         print(f"skip: {theirs} not found")
         return
-    a, b = load(ours), load(theirs)
+    a, b = strip_base(load(ours)), load(theirs)
     for key in ("posts", "pages", "fortunes", "socials"):
         if json.dumps(a.get(key), sort_keys=True) != json.dumps(b.get(key), sort_keys=True):
             failures.append(f"index.json: '{key}' differs from golden")

@@ -1,25 +1,27 @@
 name: Deploy Zola site to Pages
 
+# Production deploys the site root. Pull requests publish to a /pr-<n>/
+# subfolder so they can be tested before merging, and the subfolder is removed
+# when the pull request closes.
+#
+# This publishes to a gh-pages branch rather than using actions/deploy-pages,
+# because per-PR previews need a subfolder and Pages serves one location.
+# Repository settings must have Pages source set to "Deploy from a branch"
+# (gh-pages / root).
+
 on:
-  # Runs on pushes to main branch
   push:
     branches: ["main"]
-
-  # Runs on pull requests - build only, no deploy
   pull_request:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    types: [opened, synchronize, reopened, closed]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: "pages-${{ github.event.pull_request.number || 'production' }}"
+  cancel-in-progress: true
 
 defaults:
   run:
@@ -41,9 +43,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -53,37 +52,130 @@ jobs:
       - name: Setup wasm-pack
         uses: jetli/wasm-pack-action@v0.4.0
 
-      # Output goes to static/js/wasm so the Zola build copies it
-      # into public/ like any other static asset. zola build clears public/,
-      # so building straight into public/ would be undone on the next build.
+      # Output goes to static/ so the Zola build copies it into public/ with
+      # everything else. zola build clears public/, so building straight into
+      # it would be undone on the next run.
       - name: Build WASM
         run: |
           cd shell_wasm
           wasm-pack build --target web --out-dir ../static/js/wasm
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v4
-
       - name: Build site
+        env:
+          TECNOTER_BASE: ${{ github.event_name == 'pull_request' && format('/{0}/pr-{1}', github.event.repository.name, github.event.pull_request.number) || '' }}
         run: |
-          zola build --base-url "${{ steps.pages.outputs.base_url }}/"
+          zola build
           python3 scripts/zola/build-index-json.py .
           python3 scripts/zola/check-parity.py .
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
+          name: site
           path: ./public
 
-  deploy:
+  deploy-production:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ./public
+      - name: Publish to gh-pages root
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          rm -rf .publish && mkdir .publish && cd .publish
+          git init -q .
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch -q --depth 1 origin gh-pages
+            git checkout -q -b gh-pages FETCH_HEAD
+          else
+            git checkout -q --orphan gh-pages
+          fi
+
+          # Keep any open previews, replace everything else.
+          for dir in pr-*; do
+            [ -d "$dir" ] && cp -a "$dir" .keep_$dir || true
+          done
+          # --delete would otherwise remove the .git directory we stand in.
+          rsync -a --delete --exclude '.git' --exclude 'pr-*' --exclude '.keep_*' ../public/ ./
+          for dir in .keep_pr-*; do
+            [ -d "$dir" ] && mv "$dir" "${dir#.keep_}" || true
+          done
+
+          git add -A
+          git commit -q -m "deploy: ${GITHUB_SHA::8}" || echo "no change"
+          git push -q --force origin gh-pages
+
+  deploy-preview:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ./public
+      - name: Publish preview
+        run: |
+          PR="pr-${{ github.event.pull_request.number }}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          rm -rf .publish && mkdir .publish && cd .publish
+          git init -q .
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch -q --depth 1 origin gh-pages
+            git checkout -q -b gh-pages FETCH_HEAD
+          else
+            git checkout -q --orphan gh-pages
+          fi
+
+          rm -rf "$PR"
+          cp -a ../public "$PR"
+
+          git add -A
+          git commit -q -m "preview: ${PR} ${GITHUB_SHA::8}" || echo "no change"
+          git push -q origin gh-pages
+          echo "Preview: https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/$PR/"
+
+  cleanup-preview:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove preview
+        run: |
+          PR="pr-${{ github.event.pull_request.number }}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          rm -rf .publish && mkdir .publish && cd .publish
+          git init -q .
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            echo "no gh-pages branch, nothing to clean"
+            exit 0
+          fi
+
+          git fetch -q --depth 1 origin gh-pages
+          git checkout -q -b gh-pages FETCH_HEAD
+
+          if [ -d "$PR" ]; then
+            rm -rf "$PR"
+            git add -A
+            git commit -q -m "cleanup: remove $PR" || echo "nothing to remove"
+            git push -q origin gh-pages
+          else
+            echo "$PR not present, nothing to do"
+          fi

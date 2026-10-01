@@ -37,35 +37,28 @@
       `deploy` is gated on a push to `main` and has never run. First attempt
       happens when this branch merges. If it fails, check that Pages source is
       set to *GitHub Actions* in repository settings.
-- [ ] **PR previews.** Publish each pull request so it can be tested before
-      merging, and drop it on merge. See the note below.
+- [x] **PR previews.** Each pull request publishes to a `/pr-<n>/` subfolder
+      and the subfolder is removed when the PR closes. The deployment model
+      moved from `actions/deploy-pages` to a `gh-pages` branch to allow it.
 - [ ] **Browser parity check.** The Zola site has never been compared against
       Hugo in a real browser. The generated HTML is verified; the rendering is
       not.
 
 ## Later
 
-- [ ] **Relative asset paths.** Prerequisite for subfolder PR previews.
 - [ ] **Portfolio section** at `/projects/` for technical case studies
 - [ ] **Real mail and message commands**, backed by a notification service
 - [ ] **Phosphor themes** — alternating amber/white
 - [ ] **Telnet/SSH node** — expose the Rust core as a real remote login
 
-## Note on PR previews
+## Note on deployment
 
-GitHub Pages serves one site, so per-PR previews mean deploying into a
-subfolder on a `gh-pages` branch. The site cannot do that yet: every asset
-reference, the `index.json` fetch, and the URLs baked into that file are
-root-absolute, so a build placed at `/pr-123/` resolves everything against the
-site root and renders unstyled.
+Publishing changed from `actions/deploy-pages` to a `gh-pages` branch, because
+per-PR subfolders need a branch and Pages serves one location. **Repository
+settings must have Pages source set to "Deploy from a branch" (gh-pages /
+root).** With it on "GitHub Actions" the deploy will appear to succeed and
+nothing will update.
 
-The paths have to become relative first. The Rust side needs no change — `cat`
-derives its URL from `index.json`, so prefixing that one field covers it, and
-`bbs.js` and `commands.js` along with it. Templates need roughly two dozen
-references updated, and `static/js/terminal.js` has one hardcoded fetch.
+A preview for pull request 42 lands at:
 
-This also means choosing a Pages deployment model. The current workflow uses
-`actions/deploy-pages` (source: GitHub Actions); subfolder previews need a
-`gh-pages` branch instead. Those are mutually exclusive, so the workflow has to
-be rewritten rather than extended — worth doing only after the current deploy
-is known to work.
+    https://tecnoterio.github.io/tecnoter.io/pr-42/

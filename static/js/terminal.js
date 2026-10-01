@@ -257,8 +257,9 @@ function initTerminal() {
   }, 10000);
 
   // Dynamic imports inside init function to break early circular dependency chains
-  // First fetch index.json to populate state, then load modules
-  fetch("/index.json")
+  // First fetch index.json to populate state, then load modules.
+  // SITE_BASE is empty on the live site and set to a subfolder path for PR previews.
+  fetch((window.SITE_BASE || "") + "/index.json")
     .then(r => r.json())
     .then(data => {
       state.posts = data.posts || [];

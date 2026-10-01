@@ -8,6 +8,7 @@ Usage: python3 scripts/build-index-json.py [site_root]
 """
 
 import json
+import os
 import pathlib
 import re
 import sys
@@ -17,6 +18,11 @@ SITE = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
 CONTENT = SITE / "content"
 DATA = SITE / "data"
 OUT = SITE / "public" / "index.json"
+
+# PR previews are published under a subfolder, so every URL in the generated
+# JSON has to carry that prefix. Empty on the live site. The Rust terminal
+# builds its fetch URL from these fields, so cat.rs needs no change.
+BASE = os.environ.get("TECNOTER_BASE", "").rstrip("/")
 
 FM_RE = re.compile(r"^\+{3}\s*\n(.*?)\n\+{3}\s*", re.S)
 
@@ -83,7 +89,7 @@ def collect(section: str) -> list:
             {
                 "title": front.get("title", path.stem),
                 "slug": slug_for(front, path),
-                "url": f"/{section}/{slug_for(front, path)}/",
+                "url": f"{BASE}/{section}/{slug_for(front, path)}/",
                 "date": str(front.get("date", "0001-01-01"))[:10],
                 "tags": front.get("tags", []),
                 "categories": front.get("categories", []),

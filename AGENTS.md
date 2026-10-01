@@ -65,6 +65,20 @@ Consequences worth remembering:
 - `cat` fetches asynchronously via `spawn_local`, so a missing file reports an
   error line after the prompt returns, not at the prompt.
 
+## Deployment paths
+
+Every asset reference, the `index.json` fetch, and the URLs inside that file go
+through a base path: empty on the live site, `/<repo>/pr-<n>/` for a pull request
+preview. It reaches the templates via `get_env(name="TECNOTER_BASE")`, and
+`static/js/terminal.js` reads the same value from `window.SITE_BASE`.
+
+The Rust side needs nothing: `cat` builds its fetch URL from the `url` field in
+`index.json`, so prefixing that one field covers it, and `bbs.js` and
+`commands.js` with it. `check-parity.py` strips the prefix before comparing, so
+the gate checks content rather than deployment path.
+
+`make preview N=42` reproduces a preview build locally.
+
 ## Parity
 
 `make build` runs `check-parity.py`, which compares the generated JSON against
