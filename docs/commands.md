@@ -28,6 +28,8 @@ This document lists all available commands in the tecnoter.io terminal.
 | `clear` | Clear terminal screen |
 | `exit` | Terminate session |
 
+| `ralph` | Run the Ralph autonomous workflow | Script at `scripts/ralph/ralph.sh` |
+
 ---
 
 ## Technical Note: Command Execution

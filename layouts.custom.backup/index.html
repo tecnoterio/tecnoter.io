@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  {{ partial "head.html" . }}
+  <body>
+    {{ partial "header.html" . }}
+
+    <h1>{{ .Site.Title }}</h1>
+    <p>Welcome.</p>
+
+    <h2>Latest posts</h2>
+    <ul>
+      {{ range first 5 (where .Site.RegularPages "Section" "posts") }}
+        <li>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </li>
+      {{ end }}
+    </ul>
+
+    {{ partial "footer.html" . }}
+  </body>
+</html>
+
