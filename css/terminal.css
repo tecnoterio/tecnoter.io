@@ -1,0 +1,618 @@
+/* ==========================================================================
+   1. CORE & BASE STYLES
+   ========================================================================== */
+
+@font-face {
+  font-family: 'VT323';
+  src: local('VT323');
+}
+
+body {
+  background: #0a0c0a;
+  color: #eee;
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* THE MONITOR BEZEL */
+body::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  z-index: 1000;
+  pointer-events: none;
+  border: 55px solid #080808;
+  border-right-width: 130px; 
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+body.mode-terminal {
+  background: #050605 !important;
+  color: #ffb000;
+  text-shadow: 0 0 10px rgba(255, 176, 0, 0.5);
+  animation: flicker 0.15s infinite;
+}
+
+body.mode-green.mode-terminal {
+  background: #050605 !important;
+  color: #00ff66;
+  text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+}
+
+body.mode-bw.mode-terminal {
+  background: #000 !important;
+  color: #fff;
+  text-shadow: none;
+}
+
+/* SCREEN AREA */
+#terminal, #low-tech-hub {
+  position: fixed;
+  top: 100px;
+  left: 90px;
+  right: 170px;
+  bottom: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+#terminal {
+  display: none;
+  font-family: 'VT323', monospace;
+  font-size: 21px;
+  text-shadow: 0 0 5px rgba(255, 176, 0, 0.4);
+}
+
+/* OSS Version Indicator */
+#terminal::before {
+  content: "RUST-OS v2.53 REL-ACTIVE [CRT_OK]";
+  position: fixed;
+  top: 75px;
+  right: 170px;
+  font-size: 10px;
+  color: #ffb000;
+  opacity: 0.4;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+#low-tech-hub {
+  display: block;
+  z-index: 10;
+  background-color: #1a1b1a !important;
+  color: #eee !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji" !important;
+  line-height: 1.6;
+}
+
+#low-tech-hub * {
+  font-family: inherit;
+}
+
+#low-tech-hub h1, #low-tech-hub h2, #low-tech-hub h3 {
+  font-family: system-ui, sans-serif;
+  color: #fff;
+}
+
+body.mode-terminal #terminal { display: block; }
+body.mode-terminal #low-tech-hub { display: none; }
+
+/* INPUT & OUTPUT */
+#output, #input-line {
+  max-width: 80ch;
+  margin: 0;
+  padding: 0 10px;
+}
+
+#input-line { 
+  display: flex; 
+  align-items: center; 
+  white-space: nowrap;
+}
+
+#prompt { 
+  color: #ffb000;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+body.mode-green #prompt { color: #00ff66; }
+body.mode-bw #prompt { color: #fff; }
+
+input {
+  background: transparent;
+  border: none;
+  color: #ffb000;
+  font-family: 'VT323', monospace;
+  font-size: 1em;
+  outline: none;
+  flex: 0 0 auto; /* Stop it from filling the line */
+  width: 0; /* JS will set this in ch */
+  caret-color: transparent;
+}
+
+body.mode-green input { color: #00ff66; }
+body.mode-bw input { color: #fff; }
+
+#cursor {
+  width: 1ch;
+  height: 1.2em;
+  background: #ffb000;
+  display: inline-block;
+  visibility: hidden;
+  margin-left: 0;
+}
+
+input:focus ~ #cursor {
+  visibility: visible;
+  animation: cursor-blink 1s step-end infinite;
+}
+
+#suggestion {
+  color: #ffb000;
+  opacity: 0.3;
+  pointer-events: none;
+  margin-left: 2px;
+}
+
+/* HARDWARE CONTROLS */
+.hardware-controls {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 90px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #151515, #080808);
+  border: 1px solid #000;
+  border-right: 1px solid #222;
+  border-bottom: 1px solid #222;
+  border-radius: 4px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+  cursor: pointer;
+}
+
+.control-group.color-mode-control,
+.control-group#group-channels,
+.control-group#group-mode,
+.control-group#group-debug {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lamps-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background: #050505;
+  border: 1px solid #111;
+  border-radius: 4px;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.lamp-group { display: flex; justify-content: space-between; width: 100%; align-items: center; }
+.control-label { font-size: 14px; color: #444; font-weight: bold; font-family: monospace; }
+.control-knob { width: 22px; height: 22px; background: #111; border-radius: 50%; border: 2px solid #222; position: relative; }
+.control-knob::after { content: ""; position: absolute; top: 2px; left: 10px; width: 2px; height: 6px; background: #444; }
+.control-knob.active { border-color: #00ff66; transform: rotate(45deg); }
+
+.power-lamp { width: 12px; height: 12px; border-radius: 50%; background: #332200; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5); }
+body.mode-terminal .power-lamp { background: #ffb000; box-shadow: 0 0 6px #ffb000, inset 1px 1px 2px rgba(0,0,0,0.3); }
+.power-lamp.on { background: #ffb000; box-shadow: 0 0 8px #ffb000, 0 0 12px #ffb000, inset 1px 1px 2px rgba(0,0,0,0.3); }
+
+.uplink-lamp { width: 12px; height: 12px; border-radius: 50%; background: #330000; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5); }
+.uplink-lamp.online { background: #ffcc00; box-shadow: 0 0 8px #ffcc00, 0 0 12px #ffcc00, inset 1px 1px 2px rgba(0,0,0,0.3); }
+
+/* RETRO TOGGLE SWITCH - TV Style */
+.control-switch {
+  width: 38px;
+  height: 20px;
+  background: #111;
+  border: 2px solid #444;
+  border-radius: 3px;
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 2px 2px 4px rgba(0,0,0,0.5);
+  transition: all 0.15s ease;
+}
+
+.control-switch .switch-track {
+  pointer-events: none;
+}
+
+.control-switch .switch-handle {
+  pointer-events: none;
+}
+
+.switch-track {
+  width: 100%;
+  height: 100%;
+  background: #080808;
+  border-radius: 2px;
+  position: relative;
+  border: 1px solid #222;
+}
+
+.switch-handle {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #555, #333);
+  border-radius: 2px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.6), inset 1px 1px 2px rgba(255,255,255,0.2);
+  transition: all 0.15s ease;
+}
+
+.control-switch.active {
+  border-color: #ffb000;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 0 0 12px rgba(255, 176, 0, 0.4);
+}
+
+.control-switch.active .switch-handle {
+  background: linear-gradient(135deg, #ffd700, #ffb000);
+  left: 20px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.6), 0 0 8px rgba(255, 176, 0, 0.6), inset 1px 1px 2px rgba(255,255,255,0.3);
+}
+
+/* RETRO ROTARY DIAL */
+.control-dial {
+  width: 40px;
+  height: 40px;
+  background: #111;
+  border: 2px solid #444;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 2px 2px 5px rgba(0,0,0,0.5);
+  transition: all 0.15s ease;
+}
+
+.dial-indicator {
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5), 1px 1px 2px rgba(0,0,0,0.3);
+  transition: all 0.15s ease;
+}
+
+.control-dial.active {
+  border-color: #ffb000;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255, 176, 0, 0.4);
+}
+
+.control-dial.active .dial-indicator {
+  background: #ffb000;
+  box-shadow: 0 0 8px #ffb000, inset 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Add numbers around the dial for authenticity */
+.control-dial::before {
+  content: "1";
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  color: #666;
+  font-family: monospace;
+  pointer-events: none;
+}
+
+.control-dial::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #333, transparent);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* COLOR MODE SELECTOR */
+.color-mode-selector {
+  display: flex;
+  gap: 4px;
+}
+
+.color-mode-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid #333;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.color-mode-btn.amber {
+  background: #ffb000;
+  border-color: #ffb000;
+}
+
+.color-mode-btn.green {
+  background: #00ff66;
+  border-color: #00ff66;
+}
+
+.color-mode-btn.bw {
+  background: #888;
+  border-color: #888;
+}
+
+.color-mode-btn.active {
+  border-color: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.8);
+  transform: scale(1.1);
+}
+
+.color-mode-btn:hover {
+  transform: scale(1.15);
+}
+
+/* CLICKABLE GROUP */
+.clickable-group {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable-group:hover {
+  filter: brightness(1.15);
+}
+
+.clickable-group:active {
+  filter: brightness(0.85);
+}
+
+/* Prevent clickable-group effects from interfering with control elements */
+.clickable-group .control-switch,
+.clickable-group .control-dial,
+.clickable-group .color-mode-btn {
+  transition: none;
+}
+
+.clickable-group:hover .control-switch,
+.clickable-group:hover .control-dial,
+.clickable-group:hover .color-mode-btn {
+  filter: none;
+}
+
+.clickable-group:active .control-switch,
+.clickable-group:active .control-dial,
+.clickable-group:active .color-mode-btn {
+  filter: none;
+}
+
+/* RETRO BUTTON */
+.btn-retro {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+.btn-retro:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.btn-retro:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(255, 176, 0, 0.2);
+}
+
+/* CRT EFFECTS */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  border-radius: 80px; 
+  box-shadow: inset 0 0 0 60px #080808; 
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.1) 70%, rgba(0,0,0,0.3) 100%);
+}
+
+.crt-roll {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  pointer-events: none;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 4px, 4px 100%;
+}
+
+.crt-roll::after {
+  content: " ";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(255, 176, 0, 0.05) 50%, transparent 100%);
+  animation: scanline-roll 10s linear infinite;
+}
+
+/* UI ANIMS */
+@keyframes scanline-roll { 0% { transform: translateY(-100px); } 100% { transform: translateY(100vh); } }
+@keyframes flicker { 0%, 100% { opacity: 0.99; } 10% { opacity: 0.98; } }
+@keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes pulse-glow { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+
+/* HUB CONTENT */
+.hub-wisdom { margin-bottom: 20px; color: #ffb000; opacity: 0.8; font-style: italic; font-family: 'VT323', monospace !important; }
+
+.hub-header { 
+  display: flex; 
+  align-items: center; 
+  gap: 20px; 
+  border-bottom: 1px solid #333; 
+  margin-bottom: 30px; 
+  padding-bottom: 20px; 
+}
+
+.hub-header img {
+  height: 35px; /* Small logo as requested */
+  filter: grayscale(1) invert(1);
+}
+
+.hub-header h1 { 
+  margin: 0; 
+  font-size: 1.3rem; 
+  letter-spacing: 2px;
+}
+
+.hub-main { 
+  display: grid; 
+  grid-template-columns: minmax(0, 1fr) 1.6fr; 
+  gap: 40px; 
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hub-left { display: flex; flex-direction: column; }
+.hub-nav { display: flex; flex-direction: column; gap: 20px; }
+.nav-group { display: flex; flex-direction: column; gap: 5px; }
+.nav-group h3 { margin: 5px 0; }
+
+.hub-link, .retro-btn {
+  display: block;
+  padding: 10px 20px;
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+.hub-link:hover, .retro-btn:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.hub-link:active, .retro-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(255, 176, 0, 0.2);
+}
+
+/* External links should also look retro */
+.hub-link-external {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+/* Hub footer nav - single column fallback links */
+.hub-footer-nav { display: flex; flex-direction: column; gap: 20px; }
+
+.hub-link-external:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.hub-post-link {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.hub-post-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+.hub-post-item { border-left: 2px solid #333; padding-left: 15px; margin-bottom: 20px; }
+#hub-posts-fallback, .hub-post-list { display: flex; flex-direction: column; }
+.mode-revert, .retro-btn {
+  background: #1a1c1a;
+  color: #ffb000;
+  border: 2px solid #ffb000;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.mode-revert:hover, .retro-btn:hover {
+  background: #ffb000;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 176, 0, 0.3);
+}
+
+.mode-revert:active, .retro-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(255, 176, 0, 0.2);
+}
+
+/* MISC */
+.ps1-user { color: #ffaa00; font-weight: bold; }
+.ps1-path { color: #ffcc44; }
+.bezel-logo { position: fixed; bottom: 5px; right: 145px; height: 50px; z-index: 2000; filter: sepia(1) saturate(5) brightness(0.8); }
+.bezel-logo img { height: 100%; width: auto; }
