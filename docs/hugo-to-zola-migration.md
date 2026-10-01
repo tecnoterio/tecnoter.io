@@ -1,7 +1,7 @@
 # Hugo → Zola Migration
 
-Status: **complete.** Hugo is deleted. Zola builds the site in `zola_spike/`
-and CI deploys it. Everything below was verified against Zola 0.23.6 by building
+Status: **complete.** Hugo is deleted. Zola builds the site from the repository
+root and CI deploys it. Everything below was verified against Zola 0.23.6 by building
 it, not taken from docs.
 
 ---
@@ -148,9 +148,10 @@ the terminal's `ls /pages` output depends on it.
 
 ## One content directory, not two
 
-`zola_spike/content` is a **symlink to `../content`**. Zola and Hugo read the
-same files, so a content edit is picked up by both with no sync step. Three
-things had to be true for this:
+While Hugo was still live, `zola_spike/content` was a **symlink to
+`../content`**, so both generators read the same files and a content edit was
+picked up by both with no sync step. It has since been flattened, so there is
+one directory and no symlink. Three things had to be true for the symlink:
 
 1. `content/posts/_index.md` and `content/pages/_index.md` exist. Zola needs a
    section index to recognise a section; Hugo does not, and tolerates them
@@ -232,12 +233,15 @@ has been established, `accept-content` is how the baseline moves forward.
 | Path | Purpose |
 |------|---------|
 | `Makefile` | `build` / `serve` / `dev` / `clean` for the Zola pipeline |
-| `zola_spike/zola.toml` | site config (`[extra]` holds nav, socials, system_info) |
-| `zola_spike/templates/` | `index.html`, `page.html`, `section.html`, `search.html`, `terminal.html`, `taxonomy_list.html`, `taxonomy_single.html`, `partials/` |
-| `zola_spike/scripts/build-index-json.py` | generates `public/index.json` and per-page `index.json` from front matter |
-| `zola_spike/scripts/check-parity.py` | asserts the generated JSON matches the reference; fails the build if not |
-| `zola_spike/tests/golden/` | committed JSON reference, 13 files — seeded from Hugo, maintained with `make accept-content` |
-| `zola_spike/static/js/terminal-page.js` | standalone terminal page shim |
+| `zola.toml` | site config (`[extra]` holds nav, socials, system_info) |
+| `templates/` | `index.html`, `page.html`, `section.html`, `search.html`, `terminal.html`, `taxonomy_list.html`, `taxonomy_single.html`, `partials/` |
+| `scripts/zola/build-index-json.py` | generates `public/index.json` and per-page `index.json` from front matter |
+| `scripts/zola/check-parity.py` | asserts the generated JSON matches the reference; fails the build if not |
+| `tests/golden/` | committed JSON reference, 13 files — seeded from Hugo, maintained with `make accept-content` |
+| `static/js/terminal-page.js` | standalone terminal page shim |
+
+> Paths above were `zola_spike/...` while Hugo was still the live generator. The
+> site now lives at the repository root and the `zola_spike/` prefix is gone.
 
 ---
 
@@ -254,9 +258,10 @@ in CI.
 What did not change: the terminal, the Rust/WASM shell, the site URLs, the
 dual-mode behaviour, or anything the user sees.
 
-`zola_spike/` is still a self-contained directory. It could be flattened to
-the repo root (content is already shared via symlink), but that is cosmetic
-and was left alone to keep the diff reviewable.
+The Zola project was first built in a `zola_spike/` subdirectory while Hugo
+was still live, then flattened into the repository root once Hugo was removed.
+`content/` and `data/` no longer need to be symlinked, because there is only
+one copy of each.
 
 ## Rollback
 
@@ -267,5 +272,5 @@ git revert 4b392ed 17540c6    # restores the theme, config and hugo.yml
 git revert 83879a9            # removes the Zola pipeline
 ```
 
-The parity reference in `zola_spike/tests/golden/` is the quickest way to
-tell whether a Zola change altered anything Hugo used to produce.
+The parity reference in `tests/golden/` is the quickest way to tell whether a
+Zola change altered anything Hugo used to produce.

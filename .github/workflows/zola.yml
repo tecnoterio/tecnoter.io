@@ -53,13 +53,13 @@ jobs:
       - name: Setup wasm-pack
         uses: jetli/wasm-pack-action@v0.4.0
 
-      # Output goes to zola_spike/static/js/wasm so the Zola build copies it
+      # Output goes to static/js/wasm so the Zola build copies it
       # into public/ like any other static asset. zola build clears public/,
       # so building straight into public/ would be undone on the next build.
       - name: Build WASM
         run: |
           cd shell_wasm
-          wasm-pack build --target web --out-dir ../zola_spike/static/js/wasm
+          wasm-pack build --target web --out-dir ../static/js/wasm
 
       - name: Setup Pages
         id: pages
@@ -67,15 +67,14 @@ jobs:
 
       - name: Build site
         run: |
-          cd zola_spike
           zola build --base-url "${{ steps.pages.outputs.base_url }}/"
-          python3 scripts/build-index-json.py .
-          python3 scripts/check-parity.py .
+          python3 scripts/zola/build-index-json.py .
+          python3 scripts/zola/check-parity.py .
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./zola_spike/public
+          path: ./public
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

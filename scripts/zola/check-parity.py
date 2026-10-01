@@ -21,9 +21,7 @@ import sys
 
 SITE = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else ".").resolve()
 UPDATE = "--update" in sys.argv
-GOLDEN = SITE / "tests" / "golden" if (SITE / "tests" / "golden").is_dir() else (
-    SITE / "zola_spike" / "tests" / "golden"
-)
+GOLDEN = SITE / "tests" / "golden"
 
 failures: list[str] = []
 

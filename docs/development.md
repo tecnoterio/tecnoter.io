@@ -2,8 +2,8 @@
 
 > **Historical note.** This document records work as it stood at the time.
 > File paths refer to the Hugo theme (`themes/tecnoter.io/`), which has since
-> been removed; the equivalent files now live under `zola_spike/static/` and
-> `zola_spike/templates/`. Do not follow the paths below as current.
+> been removed; the equivalent files now live under `static/` and
+> `templates/`. Do not follow the paths below as current.
 
 
 ## Bug Fixes and Investigations

@@ -26,8 +26,8 @@ Thumbs.db
 temp/
 
 # Zola build output
-zola_spike/public/
-zola_spike/static/js/wasm/
+public/
+static/js/wasm/
 
 # Hugo lock file
 .hugo_build.lock

@@ -11,7 +11,7 @@ Tecnoter.io is built on a rigid separation of concerns to ensure performance and
 - **Output**: Generates a stream of `WasmLine` objects with semantic types (e.g., `regular`, `bbs-title`, `internalInstruction`).
 
 ### 2. The Emulator (JavaScript Display Driver)
-- **Source**: `zola_spike/static/js/`
+- **Source**: `static/js/`
 - **Ownership**: Pixel-perfect CRT rendering, sound synthesis, and hardware-to-software event handling.
 - **Direct Bridge**: JS exposes a global registry `window.terminalUI` containing primitive I/O functions (like `print()`) which the Rust Kernel calls directly via `extern "C"`.
 
