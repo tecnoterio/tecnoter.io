@@ -20,7 +20,7 @@ If your device does not meet the requirements above (e.g., you are on an older p
 The Hub is a "Progressive Enhancement" fallback. You will see it if:
 1.  **Mobile Device**: The system detects a touch-screen or small width and hides the complex CRT visuals to save battery and data.
 2.  **No WASM**: If your browser is outdated and cannot run the Rust Kernel.
-3.  **No JS**: Critical content is still pre-rendered by Hugo so search engines and text-browsers can read it.
+3.  **No JS**: Critical content is still pre-rendered at build time so search engines and text-browsers can read it.
 
 ### Hub Features
 - **Clean Interface**: Simple, high-contrast text optimized for reading.

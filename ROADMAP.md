@@ -10,7 +10,7 @@
 - [x] **Social Network Integration**: Automatic uplink opening for GitHub, Twitter, and Bluesky.
 - [x] **Rust Core Extensions**: Implemented `ls -l`, `date`, and `motd` in the WASM shell.
 - [x] **Unified Hardware UI**: Moved the monitor bezel & knobs to partials for consistency across all pages.
-- [x] **Dynamic Hub Directory**: Fallback menu is now automatically generated from Hugo markdown pages.
+- [x] **Dynamic Hub Directory**: Fallback menu is now automatically generated from the site's Markdown pages.
 - [x] **SEO & Social Support**: Integrated OpenGraph and Twitter Card internal templates.
 - [x] **Persistent Mode**: Mode preference (Terminal/Hub) is now saved in `sessionStorage`.
 - [x] **Command Documentation**: Created comprehensive `docs/commands.md` reference.
@@ -18,7 +18,7 @@
 ## Future 🚀
 - [x] **Terminal History**: Persistent `localStorage` history with Up/Down arrow navigation.
 - [x] **Live Clock Sync**: Real-time browser date integration via `js-sys`.
-- [x] **Dynamic Hugo Bridge**: Terminal filesystem, BBS menus, and categories are now 100% driven by Hugo content.
+- [x] **Dynamic Content Bridge**: Terminal filesystem, BBS menus, and categories are now 100% driven by the site's content.
 - [x] **On-Demand Fetching**: Rust Kernel now fetches individual file content asynchronously using browser APIs.
 
 ## Future 🚀
