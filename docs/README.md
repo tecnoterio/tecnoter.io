@@ -7,7 +7,9 @@ Welcome to the **tecnoter.io** documentation. This project is a hybrid website u
 - **[Usage & Compatibility](./usage.md)**: User guide, system requirements, and fallback mode information.
 - **[Architecture](./architecture.md)**: Technical overview of the dual-engine system, data bridge, and filesystem logic.
 - **[Commands](./commands.md)**: User guide for terminal commands and developer guide for adding new ones.
-- **[Development](./development.md)**: Build instructions, environment setup, and troubleshooting.
+- **[Deployment](./deployment.md)**: How the site is published, pull request previews, and the settings check.
+- **[Development](./development.md)**: Historical bug investigations, pre-dating the Zola migration.
+- **[Hugo to Zola](./hugo-to-zola-migration.md)**: What Tera and Hugo disagree about, and the traps in porting between them.
 - **[Roadmap](../ROADMAP.md)**: Project status and future goals.
 
 ## Core Philosophy

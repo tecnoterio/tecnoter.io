@@ -33,13 +33,11 @@
 
 ## Next
 
-- [ ] **Verify the deploy job.** The CI *build* is green on GitHub, but
-      `deploy` is gated on a push to `main` and has never run. First attempt
-      happens when this branch merges. If it fails, check that Pages source is
-      set to *GitHub Actions* in repository settings.
-- [x] **PR previews.** Each pull request publishes to a `/pr-<n>/` subfolder
-      and the subfolder is removed when the PR closes. The deployment model
-      moved from `actions/deploy-pages` to a `gh-pages` branch to allow it.
+- [ ] **Verify the deploy job.** The CI *build* is green on GitHub, but no
+      deploy has run: `deploy-production` is gated on a push to `main`, and the
+      `gh-pages` branch model has never been exercised. First attempt happens
+      when this branch merges. See [deployment](docs/deployment.md) for the
+      settings check.
 - [ ] **Browser parity check.** The Zola site has never been compared against
       Hugo in a real browser. The generated HTML is verified; the rendering is
       not.

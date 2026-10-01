@@ -73,6 +73,25 @@ Hugo's `.Plain` byte for byte, is in
   content edit, run `make accept-content`. It runs in CI too, so a content
   regression fails the pull request rather than only a local build.
 
+### Pull request previews
+
+Each PR now publishes to a `/<repo>/pr-<n>/` subfolder, and the subfolder is
+removed when the PR closes. Production deploys the site root and preserves any
+open previews.
+
+This required changing how the site is published. Per-PR subfolders need a
+branch to push into, and Pages serves one location, so the previous
+`actions/deploy-pages` setup could not be extended into it — the site now
+publishes to a `gh-pages` branch. **Repository settings must move Pages source
+to "Deploy from a branch"**, or the deploy goes green without updating anything.
+
+The site was root-absolute throughout and could not have run in a subfolder:
+27 references across the templates, a hardcoded `index.json` fetch in
+`static/js/terminal.js`, and every `url` inside that file. They now resolve
+through a base path supplied by `get_env`. The Rust terminal needed no change —
+`cat` derives its fetch URL from `index.json`, so prefixing that one field
+covers it, along with `bbs.js` and `commands.js`.
+
 ---
 
 ## 2026-02-19 — Content rewrite

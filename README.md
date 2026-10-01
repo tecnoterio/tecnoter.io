@@ -31,12 +31,25 @@ git clone https://github.com/tecnoter/tecnoter.io
 make dev
 ```
 
+## Deployment
+
+The site is published to a `gh-pages` branch: pushes to `main` go to the site
+root, and each pull request gets a `/pr-<n>/` subfolder that is removed when the
+PR closes.
+
+> **Before the first deploy:** set **Settings → Pages → Source** to *Deploy from
+> a branch* (`gh-pages`, `/ (root)`). With it on "GitHub Actions" the workflow
+> reports success and the site never updates.
+
+See **[docs/deployment.md](./docs/deployment.md)**.
+
 ## Documentation
 Comprehensive technical and user documentation is available in the **[`docs/`](./docs/README.md)** directory.
 
 - **[Architecture](./docs/architecture.md)**: Deep dive into the Engine vs Emulator separation.
 - **[Commands Reference](./docs/commands.md)**: List of terminal commands and guide for developers.
 - **[Development Notes](./docs/development.md)**: Historical bug investigations (pre-dates the Zola migration).
+- **[Hugo to Zola](./docs/hugo-to-zola-migration.md)**: What Tera and Hugo disagree about, and the traps in porting.
 - **[Project Roadmap](./ROADMAP.md)**: Current status and future goals.
 
 ---
