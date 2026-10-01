@@ -86,11 +86,13 @@ jobs:
           path: ./public
       - name: Publish to gh-pages root
         run: |
+          # Create the repo before setting config in it: these steps run in a
+          # workspace with no checkout, so git config would fail first.
+          rm -rf .publish && mkdir .publish && cd .publish
+          git init -q .
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          rm -rf .publish && mkdir .publish && cd .publish
-          git init -q .
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
           if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
@@ -127,11 +129,13 @@ jobs:
       - name: Publish preview
         run: |
           PR="pr-${{ github.event.pull_request.number }}"
+          # Create the repo before setting config in it: these steps run in a
+          # workspace with no checkout, so git config would fail first.
+          rm -rf .publish && mkdir .publish && cd .publish
+          git init -q .
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          rm -rf .publish && mkdir .publish && cd .publish
-          git init -q .
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
           if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
@@ -156,11 +160,13 @@ jobs:
       - name: Remove preview
         run: |
           PR="pr-${{ github.event.pull_request.number }}"
+          # Create the repo before setting config in it: these steps run in a
+          # workspace with no checkout, so git config would fail first.
+          rm -rf .publish && mkdir .publish && cd .publish
+          git init -q .
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          rm -rf .publish && mkdir .publish && cd .publish
-          git init -q .
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
           if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
