@@ -1,9 +1,9 @@
----
-title: "System Statistics"
-slug: "stats"
-group: "system"
-weight: 1
----
++++
+title = "System Statistics"
+slug = "stats"
+group = "system"
+weight = 1
++++
 Our primary node, tecnoter.io node 1, demonstrates exceptional stability and performance within our minimalist infrastructure. The system has maintained uninterrupted operation for 42 days, 13 hours, and 7 minutes, serving over 84,000 authenticated interactions.
 
 Key performance indicators:

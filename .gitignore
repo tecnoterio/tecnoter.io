@@ -1,12 +1,9 @@
-# Hugo build output
-public/
+# Site build output
 resources/_gen/
 
 # Rust/WASM build
 shell_wasm/target/
 shell_wasm/pkg/
-themes/tecnoter.io/static/js/wasm/
-themes/tecnoter.io/static/js/wasm/**
 
 # OS
 .DS_Store
@@ -24,3 +21,14 @@ Thumbs.db
 # Temp
 *.tmp
 temp/
+
+# Zola build output
+public/
+static/js/wasm/
+
+# Stale Hugo lock file, left over from the generator that used to run
+.hugo_build.lock
+
+# Python bytecode
+__pycache__/
+*.pyc

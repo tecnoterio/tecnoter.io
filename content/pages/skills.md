@@ -1,9 +1,9 @@
----
-title: "Technical Expertise"
-slug: "skills"
-group: "directory"
-weight: 2
----
++++
+title = "Technical Expertise"
+slug = "skills"
+group = "directory"
+weight = 2
++++
 Our expertise spans across cutting-edge infrastructure technologies, AI-driven engineering practices, and cloud-agnostic architectures. We combine deep technical knowledge with innovative approaches to deliver solutions that are both powerful and elegant.
 
 ## Infrastructure as Code & Automation

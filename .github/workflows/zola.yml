@@ -1,0 +1,161 @@
+name: Deploy Zola site to Pages
+
+# Production deploys the site root. Pull requests publish to a /pr-<n>/
+# subfolder so they can be tested before merging, and the subfolder is removed
+# when the pull request closes.
+#
+# This publishes to a gh-pages branch rather than using actions/deploy-pages,
+# because per-PR previews need a subfolder and Pages serves one location.
+# Repository settings must have Pages source set to "Deploy from a branch"
+# (gh-pages / root).
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "pages-${{ github.event.pull_request.number || 'production' }}"
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Zola
+        uses: taiki-e/install-action@v2
+        with:
+          tool: zola
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Setup wasm-pack
+        uses: jetli/wasm-pack-action@v0.4.0
+
+      # Output goes to static/ so the Zola build copies it into public/ with
+      # everything else. zola build clears public/, so building straight into
+      # it would be undone on the next run.
+      - name: Build WASM
+        run: |
+          cd shell_wasm
+          wasm-pack build --target web --out-dir ../static/js/wasm
+
+      - name: Build site
+        env:
+          TECNOTER_BASE: ${{ github.event_name == 'pull_request' && format('/{0}/pr-{1}', github.event.repository.name, github.event.pull_request.number) || '' }}
+        run: |
+          zola build
+          python3 scripts/zola/build-index-json.py .
+          python3 scripts/zola/check-parity.py .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: ./public
+
+  deploy-production:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ./public
+      # keep_files holds open previews while the root is replaced.
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          keep_files: "pr-*"
+          user_name: github-actions[bot]
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          commit_message: "deploy: ${{ github.sha }}"
+
+  deploy-preview:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ./public
+      - name: Publish preview
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          destination_dir: pr-${{ github.event.pull_request.number }}
+          keep_files: true
+          user_name: github-actions[bot]
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          commit_message: "preview: pr-${{ github.event.pull_request.number }} ${{ github.sha }}"
+      - name: Print URL
+        env:
+          PREVIEW_URL: "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-${{ github.event.pull_request.number }}/"
+        run: |
+          echo "Preview: $PREVIEW_URL"
+
+  cleanup-preview:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove preview
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          # The publish action has no delete mode, so the subfolder is removed
+          # with a direct push.
+          rm -rf .publish && mkdir .publish && cd .publish
+          git init -q .
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            echo "no gh-pages branch, nothing to clean"
+            exit 0
+          fi
+
+          git fetch -q --depth 1 origin gh-pages
+          git checkout -q -b gh-pages FETCH_HEAD
+
+          if [ ! -d "pr-${PR_NUMBER}" ]; then
+            echo "pr-${PR_NUMBER} not present, nothing to do"
+            exit 0
+          fi
+
+          rm -rf "pr-${PR_NUMBER}"
+          git add -A
+          git commit -q -m "cleanup: remove pr-${PR_NUMBER}"
+          git push -q origin gh-pages
+          echo "removed pr-${PR_NUMBER}"

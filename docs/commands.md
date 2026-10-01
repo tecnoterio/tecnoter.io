@@ -24,9 +24,11 @@ This document lists all available commands in the tecnoter.io terminal.
 | `help` | Show available commands |
 | `whoami` | Show current login identity |
 | `fortune` | Random technical wisdom (`js-sys` randomness) |
-| `stats` / `top` | Show node metrics (from `hugo.toml`) |
+| `stats` / `top` | Show node metrics (from `zola.toml`) |
 | `clear` | Clear terminal screen |
 | `exit` | Terminate session |
+
+| `ralph` | Run the Ralph autonomous workflow | Script at `scripts/ralph/ralph.sh` |
 
 ---
 

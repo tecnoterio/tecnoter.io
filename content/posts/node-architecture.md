@@ -1,8 +1,10 @@
----
-title: "Node 1 Architecture Overview"
-date: 2026-01-03
-tags: ["system", "hardware"]
----
++++
+title = "Node 1 Architecture Overview"
+date = 2026-01-03
+tags = ["system", "hardware"]
+[taxonomies]
+tags = ["system", "hardware"]
++++
 
 ### System Specifications
 

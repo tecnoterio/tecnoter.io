@@ -11,13 +11,13 @@ Tecnoter.io is built on a rigid separation of concerns to ensure performance and
 - **Output**: Generates a stream of `WasmLine` objects with semantic types (e.g., `regular`, `bbs-title`, `internalInstruction`).
 
 ### 2. The Emulator (JavaScript Display Driver)
-- **Source**: `themes/tecnoter.io/static/js/`
+- **Source**: `static/js/`
 - **Ownership**: Pixel-perfect CRT rendering, sound synthesis, and hardware-to-software event handling.
 - **Direct Bridge**: JS exposes a global registry `window.terminalUI` containing primitive I/O functions (like `print()`) which the Rust Kernel calls directly via `extern "C"`.
 
 ## The Hybrid Filesystem (On-Demand Loading)
 
-To handle massive Hugo sites efficiently, we use a **Metadata-Catalog** architecture:
+To handle a large site efficiently, we use a **Metadata-Catalog** architecture:
 
 1.  **Boot Catalog**: At startup, the Browser fetches a lean `index.json`. This contains ONLY file names, paths, and dates. This is injected into the Rust `SystemState`.
 2.  **Virtual Tree**: Rust maps the catalog into `/posts`, `/pages`, `/tags`, and `/categories`.

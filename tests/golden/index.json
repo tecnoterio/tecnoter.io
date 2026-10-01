@@ -1,0 +1,79 @@
+{
+  "posts": [
+    {
+      "title": "Hello World",
+      "slug": "hello-world",
+      "url": "/posts/hello-world/",
+      "date": "2026-01-03",
+      "tags": ["intro","hugo"],
+      "categories": ["general"]
+    },
+    {
+      "title": "Node 1 Architecture Overview",
+      "slug": "node-architecture",
+      "url": "/posts/node-architecture/",
+      "date": "2026-01-03",
+      "tags": ["system","hardware"],
+      "categories": []
+    },
+    {
+      "title": "test",
+      "slug": "test",
+      "url": "/posts/test/",
+      "date": "2026-01-03",
+      "tags": ["test","hugo"],
+      "categories": ["general"]
+    }],
+  "pages": [
+    {
+      "title": "Our Story",
+      "slug": "bio",
+      "url": "/pages/bio/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "System Statistics",
+      "slug": "stats",
+      "url": "/pages/stats/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Technical Expertise",
+      "slug": "skills",
+      "url": "/pages/skills/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Contact Protocol",
+      "slug": "contact",
+      "url": "/pages/contact/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Our Vision",
+      "slug": "vision",
+      "url": "/pages/vision/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Our Services",
+      "slug": "services",
+      "url": "/pages/services/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    }],
+  "socials": [{"name":"github","url":"https://github.com/tecnoterio"},{"name":"bluesky","url":"https://bsky.app/profile/tecnoterio"}],
+  "fortunes": [{"text":"Simplicity is the soul of efficiency."},{"text":"Code is like humor. When you have to explain it, it's bad."},{"text":"Fix the cause, not the symptom."},{"text":"The best error message is the one that never appears."},{"text":"Small pieces, loosely joined."},{"text":"Minimalism is not a lack of something. It is simply the perfect amount of something."},{"text":"Optimization is the root of all evil if done prematurely."},{"text":"A terminal is a conversation with the machine."},{"text":"Retro-functionalism: High tech, low noise."},{"text":"Uplink established. Truth incoming."}],
+  "systemInfo": {"loadaverage":"0.42, 0.38, 0.45","motdsuggestion":"Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit.","nodename":"tecnoterio node 1","uptime":"42 days, 13:07"}
+}

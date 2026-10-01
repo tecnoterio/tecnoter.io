@@ -1,53 +1,51 @@
-.PHONY: help build-wasm serve clean install-arch install-debian dev
+.PHONY: help build serve dev clean build-wasm accept-content preview
 
-# Default goal: list all options
 help:
-	@echo "Tecnoter Shell & Terminal - Makefile"
+	@echo "tecnoterio - Zola + Rust/WASM"
 	@echo ""
-	@echo "Usage:"
-	@echo "  make dev             Run Hugo server and Rust watcher (automatic Wasm rebuilds)"
-	@echo "  make serve           Run Hugo daemon with debug logging"
-	@echo "  make build-wasm      Compile Rust Shell/Terminal logic to Wasm"
-	@echo "  make install-arch    Install dependencies for Arch Linux"
-	@echo "  make install-debian  Install dependencies for Debian/Ubuntu"
-	@echo "  make clean           Clean build artifacts"
-	@echo "  make help            Show this help message"
+	@echo "  make build          Full production build (WASM + Zola + index.json + parity)"
+	@echo "  make serve          Zola dev server on :1111"
+	@echo "  make dev            Zola server + WASM watch (live reload)"
+	@echo "  make build-wasm     Compile Rust shell to WASM into static/js/wasm"
+	@echo "  make preview N=42     Build like PR 42, for checking a preview locally"
+	@echo "  make accept-content Accept current build as the parity baseline (after an intentional content edit)"
+	@echo "  make clean          Remove build artifacts"
 
-dev:
-	@echo "Starting dev environment... (Ctrl+C to stop both)"
-	(trap 'kill 0' SIGINT; \
-	 cargo watch -C shell_wasm -s "wasm-pack build --target web --out-dir ../themes/tecnoter.io/static/js/wasm" & \
-	 hugo server -D --disableFastRender --printI18nWarnings --logLevel debug & \
-	 HUGO_PID=$$!; \
-	 sleep 3; \
-	 xdg-open http://localhost:1313 2>/dev/null || open http://localhost:1313 2>/dev/null || true; \
-	 wait $$HUGO_PID)
-
-serve: build-wasm
-	hugo server -D --disableFastRender --printI18nWarnings --logLevel debug
+# Production build. WASM goes to static/ first so the Zola build copies it into
+# public/ with everything else; zola build clears public/, so building straight
+# into public/ would be undone on the next run.
+build: build-wasm
+	zola build
+	@python3 scripts/zola/build-index-json.py .
+	@python3 scripts/zola/check-parity.py .
+	@echo "build complete: $$(du -sh public | cut -f1) in public/"
 
 build-wasm:
-	cd shell_wasm && wasm-pack build --target web --out-dir ../themes/tecnoter.io/static/js/wasm
+	cd shell_wasm && wasm-pack build --target web --out-dir ../static/js/wasm
 
-install-arch:
-	sudo pacman -S --needed hugo wasm-pack wasm-bindgen binaryen rustup cargo-watch base-devel
-	rustup default stable
-	rustup target add wasm32-unknown-unknown
+# `make build` fails when content changes, because the parity reference is a
+# snapshot rather than a live comparison. Run this to accept the new baseline.
+accept-content:
+	@python3 scripts/zola/check-parity.py . --update
 
-install-debian:
-	sudo apt-get update
-	sudo apt-get install -y hugo build-essential curl pkg-config libssl-dev binaryen
-	if ! command -v rustup >/dev/null; then \
-		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
-		source $(HOME)/.cargo/env; \
-	fi
-	if ! command -v wasm-pack >/dev/null; then \
-		curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh; \
-	fi
-	cargo install cargo-watch
-	rustup default stable
-	rustup target add wasm32-unknown-unknown
+# Reproduce a pull request preview build. Serve the output from the repo root:
+#   make preview N=42 && python3 -m http.server -d public 8000
+# then open /tecnoter.io/pr-42/.
+preview:
+	@test -n "$(N)" || (echo "usage: make preview N=<pr number>" && exit 1)
+	TECNOTER_BASE=/tecnoter.io/pr-$(N) $(MAKE) build
+
+serve:
+	@python3 scripts/zola/build-index-json.py . >/dev/null
+	zola serve --port 1111
+
+# Development: rebuild WASM on change; Zola reloads HTML on change.
+dev:
+	(trap 'kill 0' SIGINT; \
+	 cargo watch -C shell_wasm -s "wasm-pack build --target web --out-dir ../static/js/wasm" & \
+	 (zola serve --port 1111) & \
+	 wait)
 
 clean:
-	rm -rf themes/tecnoter.io/static/js/wasm
+	rm -rf public
 	cd shell_wasm && cargo clean

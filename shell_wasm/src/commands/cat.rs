@@ -12,7 +12,7 @@ extern "C" {
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-struct HugoContent {
+struct PageContent {
     pub title: String,
     pub content: String,
 }
@@ -83,10 +83,10 @@ pub fn handle(state: &SystemState, args: Vec<&str>) -> String {
             let text_vec = wasm_bindgen_futures::JsFuture::from(resp.text().unwrap()).await;
             let text = text_vec.unwrap_or_default().as_string().unwrap_or_default();
             
-            match serde_json::from_str::<HugoContent>(&text) {
-                Ok(hugo) => {
-                    print(&format!("\n# {}\n", hugo.title), "regular");
-                    print(&hugo.content, "regular");
+            match serde_json::from_str::<PageContent>(&text) {
+                Ok(page) => {
+                    print(&format!("\n# {}\n", page.title), "regular");
+                    print(&page.content, "regular");
                 },
                 Err(e) => {
                     if debug_mode {

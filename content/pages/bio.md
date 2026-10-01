@@ -1,10 +1,9 @@
----
-title: "Our Story"
-slug: "bio"
-group: "directory"
-weight: 1
----
-
++++
+title = "Our Story"
+slug = "bio"
+group = "directory"
+weight = 1
++++
 Founded in 2024, Tecnoter.io emerged from a simple belief: the modern web deserves better. We're engineers, architects, and dreamers who refuse to accept bloated, inefficient, or insecure solutions as the status quo.
 
 Our journey began with a focus on high-performance infrastructure and minimalist engineering practices. We build systems that are not just functional, but elegant—solutions that respect user resources, prioritize security, and deliver exceptional performance.

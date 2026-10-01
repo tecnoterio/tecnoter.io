@@ -1,0 +1,46 @@
+{
+  "branchName": "roadmap-integration",
+  "project": "tecnoter.io",
+  "createdAt": "2026-02-11",
+  "version": "1.0",
+  "userStories": [
+    {
+      "id": "US-003",
+      "title": "Add Amber/White Phosphor Themes",
+      "description": "Implement phosphor-alternating CSS themes with automatic preference detection and user-configurable switcher. Includes theme persistence and accessibility compliance.",
+      "passes": false,
+      "priority": "Medium",
+      "createdAt": "2026-02-09T20:11:53Z"
+    },
+    {
+      "id": "US-004",
+      "title": "Enable Telnet/SSH Node",
+      "description": "Expose the Rust core as a real remote login node with persistent sessions, terminal history across connections, and authentication flow.",
+      "passes": false,
+      "priority": "Low",
+      "createdAt": "2026-02-09T20:30:00Z"
+    },
+    {
+      "id": "US-005",
+      "title": "Implement Real Mail/MSG",
+      "description": "Connect terminal communication commands to a backend notification system for real-time messaging integration with deliverable read receipts and message threading.",
+      "passes": false,
+      "priority": "High",
+      "createdAt": "2026-02-09T21:31:31Z"
+    },
+    {
+      "id": "US-006",
+      "title": "Add Portfolio Section",
+      "description": "Create /projects/ section to showcase technical case studies with interactive displays, navigation, and filtering for multiple portfolio entries.",
+      "passes": false,
+      "priority": "High",
+      "createdAt": "2026-02-10T23:39:50Z"
+    }
+  ],
+  "completionGoal": "All stories implemented within next 10 iterations",
+  "qualityChecks": [
+    "typecheck",
+    "lint",
+    "browser verification"
+  ]
+}

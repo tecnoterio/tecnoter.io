@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+{% set base = get_env(name="TECNOTER_BASE", default="") %}
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Search | {{ config.title }}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ base }}/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ base }}/css/terminal.css">
+</head>
+<body>
+  <div id="search-page">
+    <h1>SEARCH</h1>
+    <form id="search-form" role="search">
+      <input type="search" id="search-input" placeholder="Search this node&hellip;" aria-label="Search" autofocus/>
+      <button type="submit">SEARCH</button>
+    </form>
+
+    <div id="search-results"></div>
+
+    <p><a href="{{ base }}/">&laquo; BACK TO INDEX</a></p>
+  </div>
+
+  <style>
+    #search-page { padding: 24px; font-family: "VT323", monospace; }
+    #search-page h1 { letter-spacing: 0.15em; }
+    #search-page input[type=search] {
+      width:100%; max-width:420px; background:#111; color:#ffb000;
+      border:1px solid #444; padding:8px; font-family:inherit; font-size:1.1rem;
+    }
+    #search-page button {
+      background:#222; color:#ffb000; border:1px solid #444;
+      padding:8px 14px; font-family:inherit; cursor:pointer;
+    }
+    #search-results { margin-top:20px; max-width:640px; }
+    #search-results ul { list-style:none; padding-left:0; }
+    #search-results li { padding:4px 0; border-bottom:1px solid #222; }
+    #search-results a { color:#ffb000; text-decoration:none; }
+    #search-results a:hover { text-decoration:underline; }
+    .search-empty { color:#888; }
+  </style>
+
+  <script src="{{ base }}/elasticlunr.min.js"></script>
+  <script src="{{ base }}/search_index.en.js"></script>
+  <script>
+    (function () {
+      const input = document.getElementById('search-input');
+      const results = document.getElementById('search-results');
+      const form = document.getElementById('search-form');
+      const index = window.searchIndex;
+
+      // Index refs are absolute because base_url is set; trim to site-relative.
+      const strip = /^https?:\/\/[^/]+\//;
+
+      function labelFor(url) {
+        return url.replace(/^\/|\/$/g, '').split('/').pop() || 'index';
+      }
+
+      function render(hits) {
+        results.textContent = '';
+        if (!hits || hits.length === 0) {
+          const p = document.createElement('p');
+          p.className = 'search-empty';
+          p.textContent = 'No results found.';
+          results.appendChild(p);
+          return;
+        }
+        const ul = document.createElement('ul');
+        hits.forEach(function (ref) {
+          const url = String(ref).replace(strip, '/');
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = url;
+          a.textContent = labelFor(url);
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        results.appendChild(ul);
+      }
+
+      function run(term) {
+        if (!index || !term) { render([]); return; }
+        try {
+          render(index.search(term)));
+        } catch (error) {
+          render([]);
+        }
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const term = input.value.trim();
+        if (term) history.replaceState(null, '', '?q=' + encodeURIComponent(term));
+        run(term);
+      });
+
+      const initial = new URLSearchParams(location.search).get('q');
+      if (initial) { input.value = initial; run(initial); }
+    })();
+  </script>
+</body>
+</html>
