@@ -1,22 +1,23 @@
 # Hugo → Zola Migration
 
-Status: **spike complete and building** in `zola_spike/`. Hugo still serves production.
-Everything below was verified against Zola 0.22.1, not taken from docs.
+Status: **complete.** Hugo is deleted. Zola builds the site in `zola_spike/`
+and CI deploys it. Everything below was verified against Zola 0.23.6 by building
+it, not taken from docs.
 
 ---
 
 ## What actually works
 
 ```bash
-make -f Makefile.zola build   # WASM → Zola → index.json → parity check
-make -f Makefile.zola serve   # http://127.0.0.1:1111
+make build   # WASM → Zola → index.json → parity check
+make serve   # http://127.0.0.1:1111
 ```
 
 Verified output: 12 pages, 2 sections, plus `index.json`, per-page `index.json`,
 RSS, sitemap, search index. `scripts/check-parity.py` asserts the generated JSON
 matches the committed golden file and gates `make build`.
 
-## The safety net survives Hugo
+## The safety net outlived Hugo
 
 `scripts/check-parity.py` originally compared against a live `hugo` build. That
 made the check circular: deleting Hugo would have deleted the reference and
@@ -27,7 +28,7 @@ with it the only proof the port is faithful.
 against that, and was verified to pass with Hugo entirely absent, and to fail
 when a golden file is tampered with.
 
-Regenerate with `make -f Makefile.zola snapshot-golden` while Hugo still exists.
+Regenerate with `make snapshot-golden` while Hugo still exists.
 Once the migration is final that target can be deleted.
 
 ---
@@ -208,13 +209,14 @@ legitimately moves it and `make build` fails. That is correct behaviour for a
 regression check, but it needs an escape hatch:
 
 ```bash
-make -f Makefile.zola accept-content   # adopt current output as the baseline
+make accept-content   # adopt current output as the baseline
 ```
 
 The Hugo-derived golden file is the *proof* that the port is faithful. Once that
 has been established, `accept-content` is how the baseline moves forward.
 
-- WASM rebuild is not yet wired into CI; `Makefile.zola` does it locally.
+- `make snapshot-golden` still invokes Hugo, which no longer exists. It is kept
+  for reference only; the committed reference is what `check-parity.py` reads.
 - The `menus` in `[extra].menu_main` are unused; no template consumes them yet.
 - Colour-mode CSS classes (`mode-amber`, `mode-green`, `mode-bw`) come from the
   hardware-controls partial and were carried over unchanged — not verified in a
@@ -230,7 +232,7 @@ has been established, `accept-content` is how the baseline moves forward.
 
 | Path | Purpose |
 |------|---------|
-| `Makefile.zola` | `build` / `serve` / `dev` / `clean` for the Zola pipeline |
+| `Makefile` | `build` / `serve` / `dev` / `clean` for the Zola pipeline |
 | `zola_spike/zola.toml` | site config (`[extra]` holds nav, socials, system_info) |
 | `zola_spike/templates/` | `index.html`, `page.html`, `section.html`, `search.html`, `terminal.html`, `taxonomy_list.html`, `taxonomy_single.html`, `partials/` |
 | `zola_spike/scripts/build-index-json.py` | generates `public/index.json` and per-page `index.json` from front matter |
@@ -241,26 +243,31 @@ has been established, `accept-content` is how the baseline moves forward.
 
 ---
 
-## Recommendation
+## Outcome
 
-The migration is viable and the port is small — roughly 8 template files. The
-obstacles were all Tera/Hugo syntax mismatches, not architecture. The dual-language
-argument is real but modest: Zola removes Go, and the WASM was always Rust.
+The port was roughly 10 template files. Every obstacle turned out to be a
+Tera/Hugo syntax mismatch rather than an architectural one.
 
-Functionally the two are now equivalent: the Zola build is a superset of Hugo's
-page set, and `make build` gates on JSON parity against a reference recorded
-from Hugo.
+What changed: `hugo.toml`, `themes/`, `layouts/`, `archetypes/` and
+`hugo.yml` are gone. `Makefile` is the Zola one, so `make build` and
+`make serve` work the same as before. `zola.yml` replaces the Hugo workflow
+in CI.
 
-What remains before Hugo can be deleted:
+What did not change: the terminal, the Rust/WASM shell, the site URLs, the
+dual-mode behaviour, or anything the user sees.
 
-1. **Port CI** — `.github/workflows/hugo.yml` still builds with Hugo; a
-   `zola.yml` has to take its place, or deploys break.
-2. **Delete** `themes/`, `layouts/`, `hugo.toml`, `config.toml`.
-
-Everything needed for the port is already committed and Hugo-free.
+`zola_spike/` is still a self-contained directory. It could be flattened to
+the repo root (content is already shared via symlink), but that is cosmetic
+and was left alone to keep the diff reviewable.
 
 ## Rollback
 
-`zola_spike/` is additive. Production is untouched: `hugo.toml`, `layouts/`,
-`content/`, and `Makefile` still work. Deleting `zola_spike/` and `Makefile.zola`
-reverts everything.
+Every removal is a normal commit, so `git revert` restores Hugo:
+
+```
+git revert 4b392ed 17540c6    # restores the theme, config and hugo.yml
+git revert 83879a9            # removes the Zola pipeline
+```
+
+The parity reference in `zola_spike/tests/golden/` is the quickest way to
+tell whether a Zola change altered anything Hugo used to produce.
