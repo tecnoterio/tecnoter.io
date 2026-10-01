@@ -1,18 +1,18 @@
-.PHONY: help build serve dev clean build-wasm build-index snapshot-golden
+.PHONY: help build serve dev clean build-wasm accept-content
 
 help:
 	@echo "tecnoterio - Zola + Rust/WASM"
 	@echo ""
-	@echo "  make dev            Zola server + WASM watch (live reload)"
-	@echo "  make serve          Zola server on :1111 (pre-built WASM)"
 	@echo "  make build          Full production build (WASM + Zola + index.json + parity)"
+	@echo "  make serve          Zola dev server on :1111"
+	@echo "  make dev            Zola server + WASM watch (live reload)"
 	@echo "  make build-wasm     Compile Rust shell to WASM into zola_spike/static/js/wasm"
-	@echo "  make build-index    Regenerate public/index.json"
-	@echo "  make accept-content Accept current build as the parity baseline"
-	@echo "  make snapshot-golden Re-record the baseline from Hugo (pre-migration only)"
+	@echo "  make accept-content Accept current build as the parity baseline (after an intentional content edit)"
 	@echo "  make clean          Remove build artifacts"
 
-# Production build: WASM first so Zola copies it into public/ via static/.
+# Production build. WASM goes to static/ first so the Zola build copies it into
+# public/ with everything else; zola build clears public/, so building straight
+# into public/ would be undone on the next run.
 build: build-wasm
 	cd zola_spike && zola build
 	@python3 zola_spike/scripts/build-index-json.py zola_spike
@@ -22,26 +22,16 @@ build: build-wasm
 build-wasm:
 	cd shell_wasm && wasm-pack build --target web --out-dir ../zola_spike/static/js/wasm
 
-build-index:
-	@python3 zola_spike/scripts/build-index-json.py zola_spike
-
-# Accept the current build output as the new parity baseline. Run after an
-# intentional content edit, otherwise `make build` will fail.
+# `make build` fails when content changes, because the parity reference is a
+# snapshot rather than a live comparison. Run this to accept the new baseline.
 accept-content:
 	@python3 zola_spike/scripts/check-parity.py zola_spike --update
-
-# Re-record the parity reference from a Hugo build. Only valid while Hugo is
-# still installed; delete this target once the migration is final.
-snapshot-golden:
-	rm -rf public
-	hugo --quiet
-	@python3 zola_spike/scripts/snapshot-golden.py .
 
 serve:
 	@python3 zola_spike/scripts/build-index-json.py zola_spike >/dev/null
 	cd zola_spike && zola serve --port 1111
 
-# Development: rebuild WASM on change, Zola server reloads HTML on change.
+# Development: rebuild WASM on change; Zola reloads HTML on change.
 dev:
 	(trap 'kill 0' SIGINT; \
 	 cargo watch -C shell_wasm -s "wasm-pack build --target web --out-dir ../zola_spike/static/js/wasm" & \

@@ -23,13 +23,13 @@ matches the committed golden file and gates `make build`.
 made the check circular: deleting Hugo would have deleted the reference and
 with it the only proof the port is faithful.
 
-`snapshot-golden.py` fixes that by recording the Hugo output into
-`zola_spike/tests/golden/` — 13 JSON files, ~52K, committed. The check now runs
-against that, and was verified to pass with Hugo entirely absent, and to fail
-when a golden file is tampered with.
+The fix was to record the Hugo output into `zola_spike/tests/golden/` — 13
+JSON files, ~52K, committed. The check now runs against that, and was verified
+to pass with Hugo entirely absent, and to fail when a golden file is tampered
+with.
 
-Regenerate with `make snapshot-golden` while Hugo still exists.
-Once the migration is final that target can be deleted.
+The script that seeded it has since been deleted, so the reference is now
+advanced with `make accept-content`.
 
 ---
 
@@ -215,8 +215,7 @@ make accept-content   # adopt current output as the baseline
 The Hugo-derived golden file is the *proof* that the port is faithful. Once that
 has been established, `accept-content` is how the baseline moves forward.
 
-- `make snapshot-golden` still invokes Hugo, which no longer exists. It is kept
-  for reference only; the committed reference is what `check-parity.py` reads.
+
 - The `menus` in `[extra].menu_main` are unused; no template consumes them yet.
 - Colour-mode CSS classes (`mode-amber`, `mode-green`, `mode-bw`) come from the
   hardware-controls partial and were carried over unchanged — not verified in a
@@ -236,9 +235,8 @@ has been established, `accept-content` is how the baseline moves forward.
 | `zola_spike/zola.toml` | site config (`[extra]` holds nav, socials, system_info) |
 | `zola_spike/templates/` | `index.html`, `page.html`, `section.html`, `search.html`, `terminal.html`, `taxonomy_list.html`, `taxonomy_single.html`, `partials/` |
 | `zola_spike/scripts/build-index-json.py` | generates `public/index.json` and per-page `index.json` from front matter |
-| `zola_spike/scripts/check-parity.py` | asserts the generated JSON matches the golden file; fails the build if not |
-| `zola_spike/scripts/snapshot-golden.py` | records the Hugo output into `tests/golden/`; Hugo-free after this is run once |
-| `zola_spike/tests/golden/` | committed Hugo output, 13 JSON files — the parity reference |
+| `zola_spike/scripts/check-parity.py` | asserts the generated JSON matches the reference; fails the build if not |
+| `zola_spike/tests/golden/` | committed JSON reference, 13 files — seeded from Hugo, maintained with `make accept-content` |
 | `zola_spike/static/js/terminal-page.js` | standalone terminal page shim |
 
 ---

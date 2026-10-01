@@ -1,14 +1,14 @@
 # tecnoter.io
 
-An immersive, retro-futuristic terminal emulator website powered by **Hugo** and **Rust (WebAssembly)**.
+An immersive, retro-futuristic terminal emulator website powered by **Zola** and **Rust (WebAssembly)**.
 
 ## Project Overview
 
-This site is a hybrid between a high-fidelity terminal simulator and a modern static website. It features a custom shell kernel written in Rust that manages a virtual filesystem mapped directly from live Hugo content.
+This site is a hybrid between a high-fidelity terminal simulator and a modern static website. It features a custom shell kernel written in Rust that manages a virtual filesystem mapped directly from the site's Markdown content.
 
 ### Key Features
 - 🖥️ **WASM Engine**: Core shell logic, command parsing, and filesystem state managed by Rust for speed and type safety.
-- 📂 **Dynamic Hugo Bridge**: Virtual directories (`/posts`, `/pages`, `/tags`, `/categories`) are generated automatically from Markdown.
+- 📂 **Dynamic Content Bridge**: Virtual directories (`/posts`, `/pages`, `/tags`, `/categories`) are generated automatically from Markdown.
 - ⚡ **On-Demand Loading**: Only metadata is loaded at startup; post/page content is fetched asynchronously via Rust internal networking.
 - 📻 **Live BBS**: A functional Bulletin Board System module with live post filtering and dynamic menus.
 - 🎨 **CRT Simulation**: CSS-driven authentic CRT effects including scanlines, bezel overlays, and screen flicker.
@@ -19,14 +19,15 @@ This site is a hybrid between a high-fidelity terminal simulator and a modern st
 ### Prerequisites
 - [Rust](https://www.rust-lang.org/) (wasm32-unknown-unknown target)
 - [wasm-pack](https://rustwasm.github.io/wasm-pack/)
-- [Hugo Extended](https://gohugo.io/) (v0.120+)
+- [Zola](https://www.getzola.org/) (v0.23+)
+- [Python](https://www.python.org/) 3.11+ (build scripts)
 
 ### Build & Run
 ```bash
 # Clone the repository
 git clone https://github.com/tecnoter/tecnoter.io
 
-# Build the WASM core and start the Hugo server
+# Build the WASM core and start the dev server
 make dev
 ```
 
@@ -35,7 +36,7 @@ Comprehensive technical and user documentation is available in the **[`docs/`](.
 
 - **[Architecture](./docs/architecture.md)**: Deep dive into the Engine vs Emulator separation.
 - **[Commands Reference](./docs/commands.md)**: List of terminal commands and guide for developers.
-- **[Development Guide](./docs/development.md)**: Environment setup and troubleshooting.
+- **[Development Notes](./docs/development.md)**: Historical bug investigations (pre-dates the Zola migration).
 - **[Project Roadmap](./ROADMAP.md)**: Current status and future goals.
 
 ---

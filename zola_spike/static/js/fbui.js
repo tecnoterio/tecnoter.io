@@ -1,5 +1,5 @@
 import { state } from '/js/system.js';
-// v4 - Refactored for dynamic Hugo content
+// v4 - Refactored for dynamic site content
 
 /**
  * Fallback UI (FBUI) Logic

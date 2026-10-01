@@ -20,7 +20,7 @@ export const man = {
 
 /**
  * showContent
- * Fetches and displays content from Hugo-generated JSON
+ * Fetches and displays content from the site-generated JSON
  */
 export function showContent(slug) {
   if (!slug) return print("missing content name");

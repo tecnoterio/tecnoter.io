@@ -1,4 +1,5 @@
-// Standalone terminal page: mirrors the Hugo layouts/terminal.html behaviour
+// Standalone terminal page: a plain command window, distinct from the
+// full CRT terminal on the index page
 // but as a module so the WASM dispatcher and print() shim initialise in order.
 
 import { state, initWasm, processWithWasm } from '/js/system.js';

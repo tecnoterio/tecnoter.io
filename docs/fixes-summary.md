@@ -1,5 +1,11 @@
 # Hub Mode Fixes - Summary
 
+> **Historical note.** This document records work as it stood at the time.
+> File paths refer to the Hugo theme (`themes/tecnoter.io/`), which has since
+> been removed; the equivalent files now live under `zola_spike/static/` and
+> `zola_spike/templates/`. Do not follow the paths below as current.
+
+
 - [completed] Restore retro button styles to Tecnoter.io site
 
 ## Main Issue Investigated and Fixed

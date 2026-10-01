@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 """Regression check: generated JSON must match the recorded reference.
 
-The reference is `tests/golden/`, seeded from the Hugo build by
-scripts/snapshot-golden.py. Because the golden files are committed, this keeps
-working after Hugo is deleted.
+The reference is `tests/golden/`, a committed snapshot of the site's JSON
+output. It was seeded from the Hugo build before Hugo was removed, so it still
+records how the terminal's `cat` output was formatted at the time of the port.
 
 Two modes:
 
     python3 scripts/check-parity.py            # compare (fails on drift)
     python3 scripts/check-parity.py --update   # accept current output as new baseline
 
-Use --update after an *intentional* content edit. The golden file proves the
-Zola build renders content the way Hugo did; once that has been established,
-content changes are expected to move it.
+Use --update after an *intentional* content edit, otherwise `make build` fails
+until the new baseline is accepted.
 """
 
 import json
