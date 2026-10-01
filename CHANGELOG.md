@@ -70,7 +70,8 @@ Hugo's `.Plain` byte for byte, is in
   `tags` key (Hugo's shape) and a `[taxonomies]` table (Zola's).
 - A parity gate now runs in `make build`: the generated JSON is compared against
   a committed reference, and the build fails on drift. After an intentional
-  content edit, run `make accept-content`.
+  content edit, run `make accept-content`. It runs in CI too, so a content
+  regression fails the pull request rather than only a local build.
 
 ---
 

@@ -28,12 +28,15 @@
 - [x] Taxonomy pages (`/tags/*`, `/categories/*`) match the previous URL set
 - [x] JSON parity gate in `make build`, against a committed reference
 - [x] Content and data each exist once, at the repository root
-- [x] CI builds WASM then Zola and deploys to GitHub Pages
+- [x] CI builds WASM then Zola, gates on the parity check, and uploads the
+      artifact. Verified green on PR #6 (run 36931838407).
 
 ## Next
 
-- [ ] **Verify the Zola CI deploy.** `zola.yml` has never run on GitHub. The
-      build is proven locally and from a clean clone, but not in CI.
+- [ ] **Verify the deploy job.** The CI *build* is green on GitHub, but
+      `deploy` is gated on a push to `main` and has never run. First attempt
+      happens when this branch merges. If it fails, check that Pages source is
+      set to *GitHub Actions* in repository settings.
 - [ ] **PR previews.** Publish each pull request so it can be tested before
       merging, and drop it on merge. See the note below.
 - [ ] **Browser parity check.** The Zola site has never been compared against
