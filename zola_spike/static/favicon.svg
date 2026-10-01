@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="4" fill="#0a0c0a"/>
+  <!-- Double TT geometric brand mark -->
+  <g fill="#00ff66">
+    <!-- First T -->
+    <path d="M2 10h13l-1.5 3h-4v9h-3V13h-3l-1.5-3z"/>
+    <!-- Second T -->
+    <path d="M16 10h13l-1.5 3h-4v9h-3V13h-3l-1.5-3z"/>
+  </g>
+  <rect width="32" height="32" fill="none" stroke="#00ff66" stroke-width="2" opacity="0.1"/>
+</svg>

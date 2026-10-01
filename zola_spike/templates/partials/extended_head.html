@@ -1,0 +1,110 @@
+<style>
+  #boot-sequence {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #1b1c1d;
+    color: #ff2e88; /* Matching the pinkish color from terminal theme defaults or common terminal colors */
+    padding: 2rem;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  #boot-sequence p {
+    margin: 0.2rem 0;
+    font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: .15em solid orange;
+    animation: typing 0.3s steps(40, end), blink-caret .75s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: orange; }
+  }
+
+  .hidden-site {
+    visibility: hidden;
+  }
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const hasCSSFilters = CSS.supports('filter', 'blur(1px)');
+  const isLargeScreen = window.innerWidth > 600;
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  // If mobile, no CSS filter support, or touch device, skip boot sequence and show clean site
+  if (!hasCSSFilters || !isLargeScreen || isTouchDevice) {
+    startLogoAnimation();
+    return;
+  }
+
+  const container = document.querySelector('.container');
+  if (container) {
+    container.classList.add('hidden-site');
+    
+    const bootDiv = document.createElement('div');
+    bootDiv.id = 'boot-sequence';
+    document.body.appendChild(bootDiv);
+    
+    const messages = [
+      "SYSTEM INITIALIZING...",
+      "LOADING tecnoter.io CORE...",
+      "CHECKING PROTOCOLS...",
+      "ESTABLISHING UPLINK..."
+    ];
+    
+    let msgIndex = 0;
+    function addMessage() {
+      if (msgIndex < messages.length) {
+        const p = document.createElement('p');
+        p.textContent = "> " + messages[msgIndex];
+        bootDiv.appendChild(p);
+        msgIndex++;
+        setTimeout(addMessage, 500);
+      } else {
+        setTimeout(() => {
+          bootDiv.style.opacity = '0';
+          bootDiv.style.transition = 'opacity 0.5s ease';
+          setTimeout(() => {
+            bootDiv.remove();
+            container.classList.remove('hidden-site');
+            startLogoAnimation();
+          }, 500);
+        }, 800);
+      }
+    }
+    
+    addMessage();
+  }
+
+  function startLogoAnimation() {
+    const logo = document.querySelector(".header__logo a");
+    if (logo) {
+      const text = logo.textContent.trim();
+      logo.textContent = "";
+      let i = 0;
+      const interval = setInterval(function() {
+        if (i < text.length) {
+          logo.textContent += text.charAt(i);
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 100);
+    }
+  }
+});
+</script>

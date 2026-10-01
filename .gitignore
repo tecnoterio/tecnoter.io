@@ -31,3 +31,7 @@ zola_spike/static/js/wasm/
 
 # Hugo lock file
 .hugo_build.lock
+
+# Python bytecode
+__pycache__/
+*.pyc

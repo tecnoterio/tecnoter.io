@@ -1,0 +1,41 @@
+base_url = "https://tecnoter.io"
+title = "tecnoterio"
+description = "Electronic Art, Web3, and Low-tech Engineering."
+compile_sass = true
+build_search_index = true
+generate_feeds = true
+
+taxonomies = [
+    {name = "tags", singular = "tag"},
+    {name = "categories", singular = "category"},
+]
+
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+
+[extra]
+default_mode = "terminal"
+
+socials = [
+    {name = "github", url = "https://github.com/tecnoterio"},
+    {name = "bluesky", url = "https://bsky.app/profile/tecnoterio"},
+]
+
+system_info = {uptime = "42 days, 13:07", load_average = "0.42, 0.38, 0.45", motd_suggestion = "Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit.", node_name = "tecnoterio node 1"}
+
+menu_main = [
+    {name = "Posts", url = "/posts/", weight = 1},
+    {name = "Tags", url = "/tags/", weight = 2},
+    {name = "Terminal", url = "/terminal/", weight = 3},
+]
+nav = [
+    {title = "Our Story", url = "/pages/bio/", cmd = "cat pages/bio"},
+    {title = "Technical Expertise", url = "/pages/skills/", cmd = "cat pages/skills"},
+    {title = "Contact Protocol", url = "/pages/contact/", cmd = "cat pages/contact"},
+    {title = "Our Vision", url = "/pages/vision/", cmd = "cat pages/vision"},
+    {title = "Our Services", url = "/pages/services/", cmd = "cat pages/services"},
+]
+
+system_nav = [
+    {title = "System Statistics", url = "/pages/stats/", cmd = "cat pages/stats"},
+]

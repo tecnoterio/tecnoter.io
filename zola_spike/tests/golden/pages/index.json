@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Our Story",
+    "slug": "bio",
+    "url": "/pages/bio/",
+    "date": "0001-01-01",
+    "tags": []
+  },
+  {
+    "title": "System Statistics",
+    "slug": "stats",
+    "url": "/pages/stats/",
+    "date": "0001-01-01",
+    "tags": []
+  },
+  {
+    "title": "Technical Expertise",
+    "slug": "skills",
+    "url": "/pages/skills/",
+    "date": "0001-01-01",
+    "tags": []
+  },
+  {
+    "title": "Contact Protocol",
+    "slug": "contact",
+    "url": "/pages/contact/",
+    "date": "0001-01-01",
+    "tags": []
+  },
+  {
+    "title": "Our Vision",
+    "slug": "vision",
+    "url": "/pages/vision/",
+    "date": "0001-01-01",
+    "tags": []
+  },
+  {
+    "title": "Our Services",
+    "slug": "services",
+    "url": "/pages/services/",
+    "date": "0001-01-01",
+    "tags": []
+  }]
+
