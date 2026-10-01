@@ -84,37 +84,17 @@ jobs:
         with:
           name: site
           path: ./public
-      - name: Publish to gh-pages root
-        run: |
-          # Create the repo before setting config in it: these steps run in a
-          # workspace with no checkout, so git config would fail first.
-          rm -rf .publish && mkdir .publish && cd .publish
-          git init -q .
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
-          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            git fetch -q --depth 1 origin gh-pages
-            git checkout -q -b gh-pages FETCH_HEAD
-          else
-            git checkout -q --orphan gh-pages
-          fi
-
-          # Keep any open previews, replace everything else.
-          for dir in pr-*; do
-            [ -d "$dir" ] && cp -a "$dir" .keep_$dir || true
-          done
-          # --delete would otherwise remove the .git directory we stand in.
-          rsync -a --delete --exclude '.git' --exclude 'pr-*' --exclude '.keep_*' ../public/ ./
-          for dir in .keep_pr-*; do
-            [ -d "$dir" ] && mv "$dir" "${dir#.keep_}" || true
-          done
-
-          git add -A
-          git commit -q -m "deploy: ${GITHUB_SHA::8}" || echo "no change"
-          git push -q --force origin gh-pages
+      # keep_files holds open previews while the root is replaced.
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          keep_files: "pr-*"
+          user_name: github-actions[bot]
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          commit_message: "deploy: ${{ github.sha }}"
 
   deploy-preview:
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
@@ -127,46 +107,38 @@ jobs:
           name: site
           path: ./public
       - name: Publish preview
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
+          destination_dir: pr-${{ github.event.pull_request.number }}
+          keep_files: true
+          user_name: github-actions[bot]
+          user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          commit_message: "preview: pr-${{ github.event.pull_request.number }} ${{ github.sha }}"
+      - name: Print URL
+        env:
+          PREVIEW_URL: "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr-${{ github.event.pull_request.number }}/"
         run: |
-          PR="pr-${{ github.event.pull_request.number }}"
-          # Create the repo before setting config in it: these steps run in a
-          # workspace with no checkout, so git config would fail first.
-          rm -rf .publish && mkdir .publish && cd .publish
-          git init -q .
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
-          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            git fetch -q --depth 1 origin gh-pages
-            git checkout -q -b gh-pages FETCH_HEAD
-          else
-            git checkout -q --orphan gh-pages
-          fi
-
-          rm -rf "$PR"
-          cp -a ../public "$PR"
-
-          git add -A
-          git commit -q -m "preview: ${PR} ${GITHUB_SHA::8}" || echo "no change"
-          git push -q origin gh-pages
-          echo "Preview: https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/$PR/"
+          echo "Preview: $PREVIEW_URL"
 
   cleanup-preview:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Remove preview
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          PR="pr-${{ github.event.pull_request.number }}"
-          # Create the repo before setting config in it: these steps run in a
-          # workspace with no checkout, so git config would fail first.
+          set -euo pipefail
+          # The publish action has no delete mode, so the subfolder is removed
+          # with a direct push.
           rm -rf .publish && mkdir .publish && cd .publish
           git init -q .
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
           if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
@@ -177,11 +149,13 @@ jobs:
           git fetch -q --depth 1 origin gh-pages
           git checkout -q -b gh-pages FETCH_HEAD
 
-          if [ -d "$PR" ]; then
-            rm -rf "$PR"
-            git add -A
-            git commit -q -m "cleanup: remove $PR" || echo "nothing to remove"
-            git push -q origin gh-pages
-          else
-            echo "$PR not present, nothing to do"
+          if [ ! -d "pr-${PR_NUMBER}" ]; then
+            echo "pr-${PR_NUMBER} not present, nothing to do"
+            exit 0
           fi
+
+          rm -rf "pr-${PR_NUMBER}"
+          git add -A
+          git commit -q -m "cleanup: remove pr-${PR_NUMBER}"
+          git push -q origin gh-pages
+          echo "removed pr-${PR_NUMBER}"

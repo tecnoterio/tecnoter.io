@@ -33,9 +33,14 @@ success.
 | Job | Runs on | Does |
 |-----|---------|-----|
 | `build` | every event | Installs Zola and Rust, builds WASM, builds the site, runs the parity gate, uploads an artifact. |
-| `deploy-production` | push to `main` | Publishes the artifact to the `gh-pages` root. |
+| `deploy-production` | push to `main` | Publishes the artifact to the `gh-pages` root, keeping `pr-*` subfolders. |
 | `deploy-preview` | PR, not closed | Publishes the artifact to `/<repo>/pr-<n>/`. |
 | `cleanup-preview` | PR closed | Removes the subfolder. |
+
+Publishing uses `peaceiris/actions-gh-pages`. It was hand-rolled git first,
+which failed twice in CI — once on `git config` running before `git init`, and
+once on the push itself. The action handles token auth, orphan branches and
+`keep_files`, none of which are worth reimplementing.
 
 `build` is the gate. If it fails, nothing deploys. The most likely cause is the
 parity check rejecting a content change — run `make accept-content` locally and
