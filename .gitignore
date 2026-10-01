@@ -24,3 +24,10 @@ Thumbs.db
 # Temp
 *.tmp
 temp/
+
+# Zola build output
+zola_spike/public/
+zola_spike/static/js/wasm/
+
+# Hugo lock file
+.hugo_build.lock
