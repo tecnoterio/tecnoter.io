@@ -10,18 +10,26 @@
         <nav class="hub-nav">
           <div class="nav-group">
             <h3>DIRECTORY</h3>
-            
-            
             {% for item in config.extra.nav %}
-            <a href="{{ item.url }}" class="hub-link" data-cmd="{{ item.cmd }}">{{ item.title | upper }}</a>
+            <a href="{{ item.url }}" class="hub-link{% if current_path == item.url %} is-current{% endif %}" data-cmd="{{ item.cmd }}"{% if current_path == item.url %} aria-current="page"{% endif %}>{{ item.title | upper }}</a>
             {% endfor %}
           </div>
+          {% set expertise_open = false %}
+          {% for item in config.extra.expertise %}
+            {% if current_path == item.url %}{% set_global expertise_open = true %}{% endif %}
+          {% endfor %}
+          <details class="nav-details"{% if expertise_open %} open{% endif %}>
+            <summary>EXPERTISE</summary>
+            {% for item in config.extra.expertise %}
+            <a href="{{ item.url }}" class="hub-link hub-link-sub{% if current_path == item.url %} is-current{% endif %}" data-cmd="{{ item.cmd }}"{% if current_path == item.url %} aria-current="page"{% endif %}>{{ item.title | upper }}</a>
+            {% endfor %}
+          </details>
           <div class="nav-group">
             <h3>SYSTEM</h3>
-            {% for item in config.extra.system_nav %}
-            <a href="{{ item.url }}" class="hub-link" data-cmd="{{ item.cmd }}">{{ item.title | upper }}</a>
+            {% for item in config.extra.menu_main %}
+            <a href="{{ item.url }}" class="hub-link">{{ item.name | upper }}</a>
             {% endfor %}
-            <a href="{{ base }}/posts/" class="hub-link" data-cmd="bulletins">NEWS FEED</a>
+            <a href="{{ base }}/terminal/" class="hub-link">FULL SESSION</a>
           </div>
           <div class="nav-group">
             <h3>SOCIAL</h3>
@@ -31,7 +39,7 @@
           </div>
           <div class="nav-group">
             <h3>INTERACT</h3>
-            <a href="javascript:void(0)" onclick="alert('Press ' + (navigator.userAgent.indexOf('Mac') != -1 ? 'Cmd' : 'Ctrl') + ' + D to bookmark this node.')" class="hub-link">BOOKMARK NODE</a>
+            <a href="javascript:void(0)" onclick="alert('Press ' + (navigator.userAgent.indexOf('Mac') != -1 ? 'Cmd' : 'Ctrl') + ' + D to bookmark this node.')" class="hub-link hub-link-script">BOOKMARK NODE</a>
           </div>
         </nav>
       </section>
@@ -60,27 +68,32 @@
            </div>
         {% endif %}
         
-        <div class="hub-footer-nav" style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
-           <button class="hub-back" id="hub-back" style="display:none;">« BACK TO INDEX</button>
-           
-           <div id="hub-posts-fallback" class="hub-post-list" style="margin-top: 20px;">
-              <h4>LATEST LOGS</h4>
-              {% set posts_section = get_section(path="posts/_index.md") %}{% for post in posts_section.pages %}
-                <div class="hub-post-item">
-                  <span class="hub-post-date">[{{ post.date | date(format="%Y-%m-%d") }}]</span>
-                  <a href="{{ post.relative_path | safe }}" class="hub-post-link">{{ post.title }}</a>
-                </div>
-              {% endfor %}
-           </div>
+        {%- if current_path != "/posts/" %}
+        <div class="hub-footer-nav">
+          <button class="hub-back" id="hub-back" style="display:none;">&laquo; BACK TO INDEX</button>
+          <div id="hub-posts-fallback" class="hub-post-list">
+            <h4>RECENT LOGS</h4>
+            {% set posts_section = get_section(path="posts/_index.md") %}
+            {% for post in posts_section.pages %}
+              {% if loop.index <= 5 %}
+              <div class="hub-post-item">
+                <span class="hub-post-date">[{{ post.date | date(format="%Y-%m-%d") }}]</span>
+                <a href="{{ post.relative_path | safe }}" class="hub-post-link">{{ post.title }}</a>
+              </div>
+              {% else %}{% break %}{% endif %}
+            {% endfor %}
+            <a href="{{ base }}/posts/" class="hub-post-link hub-post-more">All logs &raquo;</a>
+          </div>
         </div>
+        {%- endif %}
       </section>
     </div>
 
     <footer class="hub-footer">
       <div class="hub-wisdom" style="margin-bottom: 10px; color: #00ff66; opacity: 0.7; font-style: italic;">
-        {{ "Simplicity is the soul of efficiency." }}
+        {% set fortunes = load_data(path="data/fortunes.toml") %}{{ fortunes.fortunes[0].text }}
       </div>
-      <span>SECURE PLAIN-TEXT HUB ACCESS v2.5 (HUGO-FALLBACK)</span>
+      <span>SECURE PLAIN-TEXT HUB ACCESS v2.5</span>
       <button class="mode-revert" id="revert-terminal">RE-ENGAGE CRT TERMINAL</button>
     </footer>
   </div>
