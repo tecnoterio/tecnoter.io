@@ -1,8 +1,7 @@
 {
-  "title": "Contact Protocol",
+  "title": "Contact",
   "slug": "contact",
   "date": "0001-01-01",
-  "content": "Primary Node: monitor.tecnoter.io\nEmail: contact@tecnoter.io\nSecure Comms: PGP-Key ID [REDACTED]\n📞 WhatsApp: Message us on WhatsApp for immediate assistance\n💼 GitHub: Tecnoterio infrastructure code and services\n",
+  "content": "The fastest way to reach us is email. Describe the system you are running and what is currently going wrong, and we will come back with an initial read.\nEmail: contact@tecnoter.io Secure comms: PGP key available on request GitHub: https://github.com/tecnoterio \u2014 infrastructure definitions, pipelines, and tools",
   "tags": []
 }
-

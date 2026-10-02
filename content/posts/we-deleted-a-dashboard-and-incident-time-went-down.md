@@ -1,0 +1,66 @@
++++
+title = "We Deleted a Dashboard and Incident Time Went Down"
+date = 2026-03-02
+weight = 355685
+tags = ["observability", "grafana", "alerting", "slo"]
+[taxonomies]
+tags = ["observability", "grafana", "alerting", "slo"]
++++
+
+Forty-one dashboards in one folder, inherited from a previous era, most of
+them built by people who had left. We deleted thirty of them. Mean time to
+diagnosis during incidents fell by about half, and nobody complained, which
+should tell you something about how the other eleven were being used.
+
+A dashboard is a claim that somebody cares about a question. Forty-one
+questions means nobody knew which. During an incident, the first cost is not
+the dashboard, it is the thirty seconds spent deciding which of forty-one to
+open, and then the twenty seconds spent switching to a second one to
+corroborate, and by then you have burned a minute of the thing you most needed
+to preserve.
+
+**What a useful dashboard has.** A question it answers, an owner, and a
+defined audience. Ours now state the question in the title. "Is the checkout
+funnel healthy" is a question. "checkout-dashboard-v3-final" is a filename.
+
+**What alert fatigue actually costs.** It is not annoyance. It is that each
+false alert costs a small amount of attention, and attention spent on a false
+alert is attention not spent on the real one, and the real one is arriving at
+the same time as the eleven others. Over a quarter, the volume of alerts that
+were not actionable was high enough that people had stopped reading the
+channel, which means the channel is no longer a detection mechanism. It is
+only a notification mechanism, and those are much worse, because you find out
+from a customer.
+
+The fix was not fewer alerts. It was alerts that correspond to something a
+person is going to do. A threshold breach on a metric nobody has a runbook for
+is not an alert, it is trivia with a push notification attached.
+
+**Burn rate changed the character of it.** Multiwindow multi-burn-rate
+alerting, from the SRE Workbook, alerts on how fast an error budget is being
+spent rather than on whether an objective is currently breached. The practical
+effect is that a service with 99.9 percent availability and a service with 99
+percent get treated correctly: the second one can burn its entire budget in an
+afternoon and that is an emergency, while the first one can be down for
+fifteen minutes without anybody waking up. Threshold alerts cannot express
+that. They can only tell you a number was crossed, and the number was chosen
+by somebody without knowing the error budget.
+
+**Dashboards as code, because hand-built ones rot.** Ours are provisioned from
+version control, which means the query behind a panel is reviewed, the panel
+can reference a metric that stopped existing, and deleting a service deletes
+its dashboards. None of that is about elegance. It is about the fact that
+hand-built dashboards outlive their metrics and then quietly mislead people
+during incidents, which is worse than having no dashboard.
+
+The last change, and the one I would make first: every dashboard states when it
+was last reviewed. Not created, not modified, reviewed. A dashboard nobody has
+looked at in a year is a hypothesis about a system that has since changed, and
+it will confidently answer the wrong question.
+
+## References
+
+- [Alerting on SLOs](https://sre.google/workbook/alerting-on-slos/) — the multiwindow burn-rate approach, with PromQL
+- [Implementing SLOs](https://sre.google/workbook/implementing-slos/) — defining the objective before the dashboard
+- [Prometheus recording rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/) and [rules best practices](https://prometheus.io/docs/practices/rules/) — the precomputation behind a fast dashboard
+- [Grafana provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/) — dashboards and data sources as code

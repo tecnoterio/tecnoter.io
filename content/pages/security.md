@@ -1,0 +1,41 @@
++++
+title = "Security and Practice"
+slug = "security"
+group = "directory"
+weight = 15
++++
+
+Threat modelling, audit evidence, and how the work is actually done.
+
+## Security and Compliance
+
+Keeping systems defensible, provably, and auditable. Search terms: SOC 2,
+ISO 27001, HIPAA, audit, penetration testing, vulnerability, zero trust,
+secrets, encryption.
+
+- **Threat modelling**: working through abuse cases before implementation,
+  and treating the resulting controls as engineering work rather than a
+  document
+- **Zero trust**: every request authenticated and authorised, no implicit
+  trust from network position, and identity as the control point
+- **Cryptographic hygiene**: key rotation, envelope encryption, and never
+  rolling your own
+- **Vulnerability management**: CVEs triaged by exploitability in the actual
+  environment rather than by severity score alone
+- **Auditing and evidence**: control implementation and continuous
+  evidence collection for SOC 2, ISO 27001, and HIPAA programmes
+- **Incident response**: preparation, detection, containment, and the
+  blameless post-incident review that turns an incident into a change
+
+## How we work
+
+- **Writing it down**: runbooks, ADRs, and design documents that outlive the
+  person who wrote them
+- **Blameless review**: incidents and near-misses examined for cause rather
+  than for a name to attach
+- **Automating the second time**: a manual procedure repeated twice becomes
+  a script, and a script repeated becomes a pipeline
+- **Small reversible changes**: small deploys, feature flags, and being
+  willing to roll back rather than debug in production
+- **Proportionate ceremony**: enough process to make a change safe, and no
+  more than the team can sustain

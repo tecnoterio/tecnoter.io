@@ -1,0 +1,57 @@
++++
+title = "Development"
+slug = "development"
+group = "directory"
+weight = 11
++++
+
+The code side: languages, and the event-driven systems that the recent work has concentrated on.
+
+## Languages and Application Development
+
+- **C and C++**: where a dependency graph will not do it, and where owning
+  the memory is a feature rather than a burden
+- **Go**: services, CLIs, and anything that has to be a single binary with
+  predictable behaviour under load
+- **Python**: the default for tooling, automation, and the parts of a system
+  that change more often than they are measured
+- **TypeScript and Node**: the parts of a product with a real interface, and
+  the build discipline that makes deploying them reversible
+- **Interfaces**: HTTP and REST as the default, gRPC and protobuf where a
+  contract has to be shared across languages, SSE or WebSockets when the
+  traffic is genuinely bidirectional
+- **Application architecture**: service boundaries that follow the data,
+  domain models that survive a schema change, and a preference for a
+  well-factored monolith over microservices that are not
+- **Performance-sensitive code**: profiling before optimising, and knowing
+  when the bottleneck is a round trip rather than a function call
+
+## Event-Driven Systems
+
+Work that happens in the background, decoupled from the request, so one slow
+dependency does not take the product down. The area where the work has
+concentrated most recently, and the one with the most to get wrong. Search
+terms: asynchronous, messaging, queue, Kafka, streaming, microservices, saga.
+
+- **Modelling events**: what a fact is versus what a command is, naming that
+  survives contact with other teams, and event schemas as an API you cannot
+  quietly change
+- **Delivery semantics**: at-least-once as the default, what exactly-once
+  costs, and idempotent consumers written so that redelivery is boring
+- **Ordering**: keys and partitions chosen to put related work in one place,
+  and the aggregate that is too hot to be one
+- **The transactional outbox**: writing the state change and the event in one
+  step, which removes the dual-write problem that otherwise loses messages
+  silently
+- **Schema evolution**: adding fields, tolerating what old consumers do with
+  a new message, and migrations that do not require a coordinated stop
+- **Replay and recovery**: rebuilding state from the log, resetting a poison
+  message, and the difference between a consumer you can restart and one you
+  can only replace
+- **Backpressure**: what happens when a consumer slows, how the queue behaves
+  before it fails, and where the retry storm starts
+- **Kafka in production**: partition and key design, consumer groups,
+  rebalancing, retention as a business decision, and using it as a log rather
+  than a message bus
+- **Coordination**: sagas, compensating actions, and admitting which
+  multi-step processes are allowed to be eventually consistent

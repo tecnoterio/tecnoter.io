@@ -1,0 +1,57 @@
++++
+title = "I Let a Model Read Our Pipeline Failures for Three Months"
+date = 2025-02-19
+weight = 356061
+tags = ["ai", "cicd", "automation", "practice"]
+[taxonomies]
+tags = ["ai", "cicd", "automation", "practice"]
++++
+
+For three months, every failed build had a model-written summary at the top
+of it. I kept track of how often it was read, whether it was right, and
+whether it changed what anybody did.
+
+The result changed how I think about this, so I will give the numbers first
+and the conclusions after, because the conclusions are the opposite of what I
+expected.
+
+About seventy percent of failures are not subtle. A compilation error, a
+failed assertion, a lint violation, a missing secret. For those, the summary
+was accurate and occasionally saved real time, mostly by pointing at the
+right file faster than scrolling would have.
+
+The other thirty percent is where it went wrong, and it went wrong in a
+specific way. When the failure was subtle, the model produced a confident,
+plausible, wrong explanation. Not a hedge, not "this might be related to" —
+a clear statement, with a file and a line number, that was simply false.
+
+Nobody was misled by the false thirty percent. That surprised me at first
+and then I understood why: engineers who know the codebase do not trust a
+generated explanation they cannot verify, and they verify it by looking. The
+summary was never the source of the mistake. It was a thing to check, like a
+colleague's guess, and colleagues' guesses get checked.
+
+So the useful part was not the diagnosis. It was the summarising. Compressing
+four hundred lines of test output into two lines, marking which of the
+eleven tests failed, and giving the failing assertion rather than the whole
+stack, was mechanical and it was reliable. That is the kind of task I now
+think this is genuinely good at: bounded, verifiable, and tedious.
+
+The thing I would not build from this is the automatic fix. It looked
+attractive and the failure mode is bad, because a plausible patch to a subtle
+failure is more expensive than the failure. Every one of those needs a
+reviewer who understands the code deeply enough to reject it, and that
+reviewer is the bottleneck the automation was supposed to remove.
+
+Where I landed: summarising, in the pipeline, for humans, with the raw output
+one click away. It is a real saving, it has no failure mode I cannot see
+from the outside, and it does not require trusting anything.
+
+The baseline matters more than the capability. Before adding any of this I
+measured how long people actually spent on failed builds, and the number was
+lower than I assumed, which is the only reason I am still running it.
+
+## References
+
+- [CNCF: the Infrastructure of AI's Future](https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/) — the current adoption data on AI in platform work, which is worth reading next to the numbers above.
+- [Sysdig: Cloud-Native Security and Usage Report](https://www.sysdig.com/2026-cloud-native-security-and-usage-report) — the other annual report I would put next to it, from the security side.

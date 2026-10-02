@@ -1,0 +1,12 @@
+{
+  "title": "Anomaly Detection That Nobody Watches",
+  "slug": "anomaly-detection-that-nobody-watches",
+  "date": "2023-09-12",
+  "content": "We had anomaly detection on six signals, a dashboard showing the score for each, and nobody looking at any of them. It was not a failure of discipline. It was a failure of design, and it took a while to see that.\nThe model was fine. The alerts were not. We had thresholded the anomaly score at the level that produced a manageable number of notifications, and the result was a stream of medium-confidence anomalies on signals that were genuinely normal. Everybody learned, correctly, that the system was noise. The silence that followed was not laziness. It was the rational response to a system that had lied often enough.\nThe thing I got wrong, and the thing I would tell my past self: the false positive rate is not a threshold you pick once and live with. It is a property of the signal, and it varies enormously between them. Request rate on a service with a weekly cycle needs a seasonal baseline. Latency on a service that is genuinely noisy should probably not be anomaly-detected at all, and the honest answer for that signal is a fixed objective threshold or nothing.\nWhat worked, roughly:\nSeparate detection from notification. A dashboard that shows the score, without an alert attached, lets you tune without training people to ignore it. We ran that way for two months per signal before enabling anything.\nOnly alert on scores you have measured. Not a percentile chosen by feel. We replayed historical incidents and asked, for this signal, at this threshold, how many false alerts would this have produced in a month. If the answer was twenty, the threshold was wrong, or the signal was.\nAlert on the thing a human acts on. A score with no associated symptom is context, not a page.\nThe general shape: an anomaly detector that alerts more than a person can check has not replaced monitoring. It has added a second system to trust, and doubled the number of things that can be wrong while you are trying to work out what is.\nReferences Prometheus alerting rules \u2014 for the baseline the detector has to beat, expressed in a form a human also reads. Prometheus recording rules \u2014 precomputing the seasonal baselines rather than recomputing them per query. Prometheus: rules best practices \u2014 naming and aggregation conventions worth following before the rules pile up.",
+  "tags": [
+    "observability",
+    "anomaly-detection",
+    "ml",
+    "alerting"
+  ]
+}

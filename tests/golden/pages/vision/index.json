@@ -1,8 +1,7 @@
 {
-  "title": "Our Vision",
+  "title": "Vision",
   "slug": "vision",
   "date": "0001-01-01",
-  "content": "To bridge the gap between the tactile history of computing and the scalable future of the decentralized web through AI-enhanced engineering, intelligent automation, and human-centered design.\nWe envision a digital landscape where technology serves humanity with elegant efficiency, where systems anticipate needs before they\u0026rsquo;re expressed, and where the complexity of modern infrastructure is managed with intelligent simplicity. Our future is one where performance, security, and user experience are not competing priorities, but inseparable pillars of every technological solution we create.\n",
+  "content": "To keep infrastructure legible. The goal is a platform where a new engineer can read the repository, predict what a merge will do, and trust the result in production without a runbook.\nThree commitments follow from that, and they are the standard we hold our own work to:\nReproducible over assembled. Everything a system needs should exist in version control and be produced by a command. If it was typed by hand at 2 a.m., it is a defect waiting for a holiday. Observable over assumed. If a change cannot be seen in metrics, logs, and traces before it ships, it is not finished. A silent failure costs more than a noisy one. Portable by construction. Cloud-agnostic design is what stops a vendor decision, a price change, or a regional outage from becoming an incident.\nWe expect AI to change how the work is done rather than what the work is. The judgement calls, the failure modes, and the operating discipline stay with the engineers who own the system.",
   "tags": []
 }
-

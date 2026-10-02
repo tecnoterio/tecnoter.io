@@ -1,0 +1,160 @@
++++
+title = "Systems and Infrastructure"
+slug = "systems"
+group = "directory"
+weight = 12
++++
+
+The foundation: Unix and Linux, configuration management, and infrastructure as code.
+
+## Unix and Linux
+
+The foundation underneath everything else, and where most of the career went.
+Search terms: sysadmin, systems administration, Linux, server, bash, shell,
+performance tuning, hardening, troubleshooting.
+
+### Systems internals
+
+- **Boot and init**: BIOS/UEFI, bootloaders, initramfs and how a broken
+  initramfs strands a host, systemd unit semantics including the dependency
+  directives that cause ordering deadlocks, socket activation, timers, and
+  `OnFailure=` handling
+- **Filesystems**: ext4, XFS, and Btrfs journal and allocation behaviour;
+  the mounting options that matter in production (`noatime`, `discard`, the
+  `commit=` interval); how inode and descriptor exhaustion presents; fstab
+  ordering failures
+- **Process and resource model**: fork/exec, cgroups v2 hierarchies,
+  namespaces (pid, mount, net, user, uts, cgroup), `/proc` and `/sys` as the
+  actual debugging interface, rlimits, OOM behaviour, and process states that
+  do not mean what they appear to
+- **Signals**: what SIGHUP does to a daemon versus what it does to a shell
+  job, why daemons must double-fork, and recovering a wedged process tree
+  without a reboot
+- **Memory**: virtual versus resident, page cache behaviour, swap and
+  `vm.swappiness`, OOM-killer selection and how to stop it choosing the wrong
+  process, transparent hugepages and the latency they trade away
+- **Scheduling and I/O**: cgroups CPU weights, `SCHED_FIFO` versus
+  `SCHED_BATCH`, io_uring, and choosing I/O schedulers per workload
+- **Kernel modules and builds**: loading, blacklisting, building out-of-tree
+  modules, `backports`, and pinning a working kernel during an upgrade
+- **Device handling**: udev rules, predictable naming, serial and multipath
+  device persistence, and why a device that vanishes after reboot is usually a
+  udev problem rather than a hardware one
+
+### Networking
+
+- **TCP/IP in depth**: connection state, the listen and accept queues and
+  what SYN flooding them looks like, TIME_WAIT accumulation, keepalive
+  tuning, buffer sizing, and the latency-versus-throughput tradeoffs in BBR
+  versus cubic
+- **Name resolution**: bind, resolv.conf, systemd-resolved stub resolvers,
+  nsswitch, and the split-DNS setups that resolve internally and externally
+  at once
+- **Firewalling**: nftables and its migration path from iptables, conntrack
+  and the state machine, NAT and reverse proxying, and rulesets that stay
+  reviewable six months later
+- **TLS**: certificate chains, renewal automation, OCSP stapling, protocol
+  and cipher selection, and reading `openssl s_client` output when a
+  handshake fails for reasons nobody can reproduce
+- **Link and bonding**: VLANs, bridges, LACP, MTU and path-MTU discovery
+  across mixed links, and the routing asymmetry that appears the moment
+  traffic takes two paths out
+- **Packet-level debugging**: tcpdump with filters that actually narrow the
+  problem, `ss` and `/proc/net` for socket state, iproute2, and using a
+  remote host as an observation point
+
+### Shell and text tooling
+
+- **Shell fluency**: POSIX sh, bash and zsh differences that bite in
+  scripts, `set -euo pipefail` and why it is not a complete answer, traps and
+  signal handling, here-documents, process substitution, and not re-parsing
+  untrusted input
+- **Pipelines as a design tool**: awk for column extraction, sed for
+  substitution, jq for JSON, yq for YAML, composed so the intermediate
+  representation stays inspectable
+- **Search at scale**: ripgrep, fd, and the specific reason `grep -r`
+  misbehaves on some filesystems
+- **Finding things**: find, its surprising cost on large trees, and the
+  `-printf` and `-prune` forms that make it usable
+- **Text and binary data**: encodings and why an accented name breaks a
+  script, `iconv`, hexdump and xxd for protocol work, reading a core dump
+
+### Debugging and performance
+
+Making systems smaller, faster, and harder to break, and finding out why
+something is slow before a customer does. Search terms: latency, throughput,
+optimization, load testing, scaling, incident, post-mortem, uptime.
+
+- **Method over tooling**: a repeatable loop of reproduce, narrow, instrument,
+  fix, verify
+- **Tracing**: strace and ltrace for syscalls, bpftrace and eBPF for
+  production-safe observation, perf and flame graphs for CPU
+- **Memory and allocation**: valgrind and sanitizers for correctness, heap
+  profiling, and the leak that only appears under sustained load
+- **System-level performance**: iostat, iperf, sar, and reading load average
+  and pressure stall information rather than reciting it
+- **When the disk lies**: fsync behaviour, write barriers, queue depth, and
+  the difference between a slow disk and a full one
+- **Postmortems**: reconstructing a timeline from logs that were not designed
+  to be correlated, and writing the follow-up work that removes the cause
+
+### Security engineering on the host
+
+- **Hardening baselines**: CIS-style configuration applied automatically
+  rather than aspirationally, with the drift visible in CI
+- **Mandatory access control**: SELinux and AppArmor policy, the difference
+  between enforcement and complaint mode, and writing a policy instead of
+  switching it off
+- **Sandboxing**: seccomp-BPF filters, capability bounding,
+  no-new-privileges, and running the workload as a non-root uid that exists
+- **Authentication**: PAM stacks, nsswitch, SSH hardening, key management,
+  and certificate-based host identity
+- **Secrets on hosts**: Vault agents and templates, short-lived credentials,
+  and why a secret in an image tag is a compromise with extra steps
+- **Unattended patching**: apt and dnf security tracks, and the update
+  strategy for a fleet that cannot be reimaged on a whim
+
+## Configuration Management
+
+Keeping every machine, container, and network device described in version
+control and provably matching what should be running. Search terms:
+provisioning, configuration drift, inventory, golden image, idempotence.
+
+- **Ansible**: inventories, roles, collections, vault, check and diff modes,
+  idempotence as a design constraint, and handlers used sparingly
+- **State and drift**: knowing what the system believes about itself versus
+  what is actually running, and failing the build when the two disagree
+- **Packer**: reproducible machine images built in CI, so a host is a build
+  artefact rather than a clone of a server nobody wants to touch
+- **SaltStack**: event-driven automation, the reactor, and high-concurrency
+  remote execution
+- **Puppet**: declarative enforcement, catalog compilation, and the right
+  place for it in an environment Ansible runs against
+- **Rendered configuration**: templates as a deterministic build output,
+  promoted through environments as a pull request, with the rendered artefact
+  diffed in review — because that diff is the actual review
+- **Configuration formats**: when YAML stops being the right answer, TOML
+  and JSON Schema validation, and validating early enough to catch a typo
+  before it becomes a reboot
+
+## Infrastructure as Code
+
+Describing infrastructure in version control so it can be reviewed, rebuilt,
+and understood by someone who did not write it. Search terms: Terraform,
+provisioning, state management, IaC, modules, policy as code.
+
+- **Terraform**: module design and versioning, workspaces versus separate
+  states, remote state with locking, provider constraints, targeted plans,
+  and `import` and `moved` blocks used to reshape state without destroying
+  anything
+- **State hygiene**: the discipline that makes the plan trustworthy, since
+  Terraform is only as honest as what it knows
+- **OpenTofu**: where policy or licensing requirements call for it
+- **Policy as code**: Sentinel and OPA, and guardrails that prevent the
+  expensive mistake instead of reporting it afterwards
+- **Secrets**: Vault dynamic credentials, short-lived tokens, and
+  separation of duties so that one repository cannot read production
+- **Consul and Nomad**: service discovery, session-based health, and
+  orchestration for fleets where Kubernetes is not the right answer
+- **Cost and drift as first-class signals**: policy tests in CI, cost
+  estimates on every plan, and continuous detection of out-of-band changes

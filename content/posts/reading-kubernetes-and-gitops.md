@@ -1,0 +1,68 @@
++++
+title = "Reading: Kubernetes and GitOps, Mostly the Hard Parts"
+date = 2026-01-22
+weight = 355724
+tags = ["kubernetes", "gitops", "reading", "platform"]
+[taxonomies]
+tags = ["kubernetes", "gitops", "reading", "platform"]
++++
+
+A link roundup. Kubernetes writing is enormous and mostly restates the API
+documentation. What is worth reading is the operational reality: what breaks,
+what the abstractions cost, and what platform teams learned the expensive
+way.
+
+**Start with semantics, not syntax.** The CNCF blog on
+[when Kubernetes restarts your pod, and when it doesn't](https://www.cncf.io/blog/2026/03/17/when-kubernetes-restarts-your-pod-and-when-it-doesnt/).
+Pod lifecycle, ConfigMap behaviour, image updates, and in-place resize
+against a current release. Written by a maintainer, verified against the
+released version, and it answers the questions people actually get wrong.
+
+**The disaster recovery piece is unusually good.** CNCF on
+[Kubernetes disaster recovery from three reproducible failure
+scenarios](https://www.cncf.io/blog/2026/09/10/kubernetes-disaster-recovery-guidance-from-three-reproducible-failure-scenarios/).
+The important insight is the distinction between a backup that completed and
+a system that is actually recoverable, which are different claims, and the
+gap between declared state and stored state, which is the gap every GitOps
+deployment lives in. Three scenarios you can reproduce yourself.
+
+**On policy, from a platform angle rather than a security one.** CNCF on
+[guardrails not gates](https://www.cncf.io/blog/2026/10/01/guardrails-not-gates-rethinking-policy-in-platform-teams/),
+which reframes policy as a product the platform team owns, and a companion
+argument that
+[Kyverno is a platform primitive, not a security
+tool](https://www.cncf.io/blog/2026/08/19/kyverno-is-a-platform-primitive-not-a-security-tool/).
+Both from a CNCF ambassador writing about adoption rather than enforcement,
+which is the more useful framing if you are trying to get teams to comply
+with something.
+
+**Multi-tenancy, concretely.** Engineers from Adobe on
+[whose GPUs are these anyway](https://www.cncf.io/blog/2026/09/09/whose-gpus-are-these-anyway-secure-self-service-metrics-for-multi-tenant-kubernetes/),
+solving self-service metrics visibility without breaking tenant isolation.
+The routing pattern is reusable well beyond GPU workloads.
+
+**Where Argo is heading.** The ArgoCon chairs on
+[Argo CD 4.0 and the state of the project](https://www.cncf.io/blog/2026/09/30/argocon-north-america-2026-what-to-expect-as-the-argo-community-looks-toward-cd-4.0/).
+Sixty thousand applications in production somewhere, which is the number
+that matters if you are deciding whether a project has survived contact with
+production at scale. It has.
+
+**Service mesh, with numbers.** Istio's own comparison of
+[ambient mode against Cilium](https://istio.io/latest/blog/2024/ambient-vs-cilium/)
+at a thousand nodes and fifty thousand pods. Istio benchmarking a competitor
+is worth reading for the methodology even when you distrust the conclusion.
+The [ambient GA announcement](https://istio.io/latest/blog/2024/ambient-reaches-ga/)
+covers the resource-overhead argument that started it, and
+[multicluster ambient](https://istio.io/latest/blog/2025/ambient-multicluster/)
+is honest about the power and complexity of cross-cluster.
+
+**One feature worth knowing about.** Kubernetes 1.35 on
+[in-place pod resize reaching stable](https://kubernetes.io/blog/2025/12/19/kubernetes-v1-35-in-place-pod-resize-ga/).
+Resizing a running pod without recreating it, which removes a class of
+disruption that the autoscaler had been working around for years.
+
+## What I would actually read in this order
+
+The pod lifecycle post, then the disaster recovery one, then whatever matches
+the problem you currently have. Everything else is reference material, and
+reference material is better read on demand than in advance.

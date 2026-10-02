@@ -1,6 +1,6 @@
 base_url = "https://tecnoter.io"
 title = "tecnoterio"
-description = "Electronic Art, Web3, and Low-tech Engineering."
+description = "Systems engineering: Unix and Linux, infrastructure as code, GitOps, and observability."
 compile_sass = true
 build_search_index = true
 generate_feeds = true
@@ -29,13 +29,19 @@ menu_main = [
     {name = "Terminal", url = "/terminal/", weight = 3},
 ]
 nav = [
-    {title = "Our Story", url = "/pages/bio/", cmd = "cat pages/bio"},
-    {title = "Technical Expertise", url = "/pages/skills/", cmd = "cat pages/skills"},
-    {title = "Contact Protocol", url = "/pages/contact/", cmd = "cat pages/contact"},
-    {title = "Our Vision", url = "/pages/vision/", cmd = "cat pages/vision"},
-    {title = "Our Services", url = "/pages/services/", cmd = "cat pages/services"},
+    {title = "About", url = "/pages/bio/", cmd = "cat pages/bio"},
+    {title = "Expertise", url = "/pages/skills/", cmd = "cat pages/skills"},
+    {title = "Services", url = "/pages/services/", cmd = "cat pages/services"},
+    {title = "Vision", url = "/pages/vision/", cmd = "cat pages/vision"},
+    {title = "Contact", url = "/pages/contact/", cmd = "cat pages/contact"},
 ]
 
-system_nav = [
-    {title = "System Statistics", url = "/pages/stats/", cmd = "cat pages/stats"},
+# The five expertise sub-pages, split out of skills.md. Kept separate from
+# `nav` so the directory stays five items and the detail stays one click away.
+expertise = [
+    {title = "Development", url = "/pages/development/", cmd = "cat pages/development"},
+    {title = "Systems", url = "/pages/systems/", cmd = "cat pages/systems"},
+    {title = "Delivery", url = "/pages/delivery/", cmd = "cat pages/delivery"},
+    {title = "Observability", url = "/pages/observability/", cmd = "cat pages/observability"},
+    {title = "Security", url = "/pages/security/", cmd = "cat pages/security"},
 ]

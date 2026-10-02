@@ -17,13 +17,31 @@ text = "Small pieces, loosely joined."
 text = "Minimalism is not a lack of something. It is simply the perfect amount of something."
 
 [[fortunes]]
-text = "Optimization is the root of all evil if done prematurely."
+text = "Premature optimization is the root of all evil. Premature automation is worse."
 
 [[fortunes]]
 text = "A terminal is a conversation with the machine."
 
 [[fortunes]]
-text = "Retro-functionalism: High tech, low noise."
+text = "Retro-functionalism: high tech, low noise."
 
 [[fortunes]]
 text = "Uplink established. Truth incoming."
+
+[[fortunes]]
+text = "Anything added dilutes everything else."
+
+[[fortunes]]
+text = "Plan for the failure you did not expect, then forget you ever did."
+
+[[fortunes]]
+text = "It is easier to change the specification to fit the program than vice versa."
+
+[[fortunes]]
+text = "There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors."
+
+[[fortunes]]
+text = "A pipeline is a promise that the output of one stage is valid input to the next."
+
+[[fortunes]]
+text = "Boring is a compliment you can deploy."

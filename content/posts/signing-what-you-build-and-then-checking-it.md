@@ -1,0 +1,51 @@
++++
+title = "Signing What You Build, and Then Checking It"
+date = 2025-08-06
+weight = 355893
+tags = ["supply-chain", "security", "cicd", "kubernetes"]
+[taxonomies]
+tags = ["supply-chain", "security", "cicd", "kubernetes"]
++++
+
+We generated SBOMs for about a year before we did anything with them. The
+files were generated, stored, referenced in a policy document, and read by
+nobody. I am fairly sure we produced a false sense of accomplishment.
+
+Generation is the easy part. An SBOM is a list, and a list does not do
+anything on its own. It becomes useful only at the moment somebody asks a
+question: are we running anything with this CVE, and if so where.
+
+The version that works is a gate rather than a report. A vulnerability with
+a published fix and a high score arrives, and instead of arguing about
+prioritisation in a meeting you ask the cluster. What is running, and is it
+exploitable here.
+
+Two things made it real for us. The admission controller that refuses an
+unsigned image, because verification that is advisory is verification that
+gets skipped under time pressure. And a scheduled job that reads the
+inventory and produces a list of the actual affected images, because a
+remediation list nobody has to compile gets acted on.
+
+The signing itself is the easy half, thanks to keyless signing taking the
+key custody problem away. Sign at build, sign in CI, not on a laptop. The
+attestation matters as much as the signature, because the thing you need to
+verify is not merely that the artefact is intact, it is that this artefact
+came from this repository at this commit via this workflow. Otherwise a valid
+signature on an artefact built by an attacker is still a valid signature.
+
+The part where teams get stuck is the legacy images. Half our estate was
+built before any of this existed and cannot be rebuilt quickly. We did not
+solve it. We got the new path correct, stopped the sprawl, and accepted that
+some old things are not going to be signed this year, with the list kept
+visible rather than the exception quietly granted.
+
+Compliance framing is a poor motivator here. The honest motivation is that
+the first serious compromise of your build pipeline will be supply chain
+shaped, and the difference between finding it and not finding it is a signed,
+verifiable, queryable inventory.
+
+## References
+
+- [Sigstore documentation](https://docs.sigstore.dev/) — cosign, Fulcio, and Rekor. Keyless signing is what removes key custody from the problem.
+- [SLSA build levels](https://slsa.dev/spec/latest/levels) and [provenance](https://slsa.dev/spec/latest/provenance) — what an attestation has to contain to be worth verifying.
+- [Admission webhook best practices](https://kubernetes.io/docs/concepts/cluster-administration/admission-webhooks-good-practices/) — the Kubernetes side of enforcing it rather than advising it.

@@ -1,0 +1,12 @@
+{
+  "title": "A Dockerfile Is a Build Reproducibility Problem",
+  "slug": "a-dockerfile-is-a-build-reproducibility-problem",
+  "date": "2023-04-18",
+  "content": "I built the same image twice, from the same Dockerfile, in the same week, and got different digests. The tag was the same, the build was the same, the machine was the same. The dependency resolution was not the same, because the thing the Dockerfile said was \"latest\".\nThis is not exotic. A Dockerfile that says \"install these packages\" is a statement of intent, not a specification. It resolves differently depending on the day, the mirror, and the phase of the moon. Everything after that line is downstream of a decision you did not make.\nI do not think the answer is to pin everything to the extreme. In practice a useful Dockerfile has three levels of pinning and you choose deliberately per level. The base image is pinned by digest, because that is the foundation and it is cheap. Application dependencies are locked by a lockfile that is committed, because that is what your tests ran against. Operating system packages are versioned loosely, because pinning every one of them produces a patch backlog you will not do, and a slightly stale system package is a smaller risk than a system that cannot be patched at all.\nThe real value of pinning the base image is not the security. It is that when something breaks eight months later, you can go back and build the thing that was actually running. Reproducibility is a debugging feature first. Security is downstream of being able to reconstruct what you had.\nThe other thing that changed: we build once and promote. The artefact that passes testing is the artefact that deploys, by digest, and it moves through environments without being rebuilt. We learned this the expensive way, with a staging artefact that was not the production artefact, which is a sentence no one should have to write in a post-incident review.\nReferences SLSA build levels \u2014 what it means for a build to be reproducible, and how the levels are defined. Sigstore documentation \u2014 signing the artefact by digest once reproducibility makes the digest meaningful. Packer documentation \u2014 the same reasoning applied to machine images.",
+  "tags": [
+    "containers",
+    "cicd",
+    "supply-chain",
+    "build"
+  ]
+}

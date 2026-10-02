@@ -1,0 +1,54 @@
++++
+title = "Exactly-Once Costs Something, and the Bill Arrives Later"
+date = 2024-04-11
+weight = 356375
+tags = ["event-driven", "kafka", "architecture", "distributed-systems"]
+[taxonomies]
+tags = ["event-driven", "kafka", "architecture", "distributed-systems"]
++++
+
+Exactly-once delivery is a phrase I have come to distrust, not because the
+idea is wrong but because the phrase hides where the cost went.
+
+What is actually available, and the distinctions matter:
+
+At-most-once is fast and lossy. Publish and move on. A dropped event is
+permanent and you will find out from a customer.
+
+At-least-once is the sane default. Retries on failure, and accept that the
+consumer must handle duplicates. This is what a transactional outbox gives
+you, and in my experience it is the right answer for the large majority of
+systems.
+
+Effectively-once, in the Kafka sense, means the read and the write are
+atomic with respect to the changelog. It is genuinely useful and it is
+genuinely expensive: the transactional machinery has to be carried through
+the producer, the broker, and the consumer, and it limits what you can do
+inside the transaction. You cannot call an external API in one.
+
+The trap is that people adopt effectively-once and then still write
+non-idempotent consumers, because the read-modify-write now looks atomic and
+it is only atomic with respect to Kafka. Two services writing to the same
+database row in separate transactions are exactly-once and still lose an
+update, because the transaction boundary you chose is not the one where the
+conflict happens.
+
+So the cost is not only performance. It is a false guarantee that is more
+expensive than the honest weaker one, because it stops people writing the
+idempotency that was doing the work.
+
+What I settled on. Design every consumer to be idempotent as a matter of
+course, because duplicates will happen for reasons that have nothing to do
+with delivery semantics: at-least-once retry, a consumer group rebalance, an
+operator redeploying mid-processing, a manual replay. Then use exactly-once
+where it genuinely simplifies a specific problem, and know precisely which
+boundary it covers.
+
+Idempotency is not a workaround for a delivery guarantee. It is the property
+that makes every other guarantee survivable.
+
+## References
+
+- [Message Delivery Semantics](https://docs.confluent.io/kafka/design/delivery-semantics.html) — the official description of the three guarantees and exactly what each does and does not cover.
+- [Idempotent Consumer](https://microservices.io/patterns/communication-style/idempotent-consumer.html) — the property that makes duplicates survivable.
+- [Apache Kafka documentation](https://kafka.apache.org/documentation/) — current version and configuration reference.

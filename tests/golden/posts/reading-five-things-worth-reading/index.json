@@ -1,0 +1,12 @@
+{
+  "title": "Reading: Five Things Worth Reading",
+  "slug": "reading-five-things-worth-reading",
+  "date": "2026-01-29",
+  "content": "Short list, updated occasionally. Vendor posts are marked, because most of the writing in these areas comes from companies selling something.\nObservability 1.0 versus 2.0 \u2014 Charity Majors on why three separate datasources is an architectural choice with a cost. Read it (vendor). Follow with the cost crisis in metrics tooling, which puts real numbers on cardinality.\nAlerting on SLOs \u2014 the Google SRE Workbook chapter, with the actual PromQL for multiwindow burn-rate alerting and the low-traffic case that breaks the naive version. Read it. Old, canonical, free.\nThe TanStack postmortem \u2014 a supply chain compromise, written by the person whose packages it was. The kill chain is the point: pullrequesttarget, then cache poisoning, then OIDC token theft. Read it. Then SLSA&rsquo;s own analysis of where its guarantees stop.\nThe transactional outbox \u2014 the pattern, framed as a compromise between two other designs rather than as the right answer. Read it.\nNew 8-bit hardware \u2014 for the constraint exercise. MEGA65 is a real computer built as a realisation of the Commodore C65 that never shipped. Read it. MiSTer is the open-source FPGA answer. Read it. The best technical writing around it is Leaded Solder and Pagetable.\nIf you only read one The SRE Workbook chapter. It is free, it is short, and it is correct.",
+  "tags": [
+    "reading",
+    "observability",
+    "supply-chain",
+    "event-driven"
+  ]
+}

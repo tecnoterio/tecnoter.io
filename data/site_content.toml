@@ -1,23 +1,19 @@
 [bio]
 title = "Company Biography"
-content = "Tecnoter.io was founded in 2020 to redefine digital infrastructure through minimalist engineering, retro-functional design, and decentralized technologies. We build high-performance systems that honor the past while pioneering the future of Web3 and low-tech solutions."
+content = "Tecnoter.io is a systems engineering company with a long career building software and the infrastructure it runs on. Systems work, networking, and infrastructure were the foundation; the recent centre of gravity is large event-driven systems."
 
 [skills]
 title = "Technical Deck"
-content = "Our expertise spans across: System Architecture, High-Availability Cloud Infrastructure, Hugo/Static Site Engineering, and Low-Level Performance Optimization."
+content = "Our expertise spans: C, C++, Go, Python, and TypeScript; event-driven systems including ordering, idempotency, and replay; Unix and Linux system engineering; delivery pipelines and supply chain security; Kubernetes and GitOps with Argo; deep open source observability with the Grafana LGTM stack; and data and analytics, from telemetry queries to classical modelling."
 
 [contact]
 title = "Contact Protocol"
-content = "Primary Node: monitor.tecnoter.io\nEmail: contact@tecnoter.io\nSecure Comms: PGP-Key ID [REDACTED]"
+content = "Email: contact@tecnoter.io\nSecure Comms: PGP key available on request\nGitHub: https://github.com/tecnoterio"
 
 [vision]
 title = "Corporate Vision"
-content = "To bridge the gap between the tactile history of computing and the scalable future of the decentralized web."
+content = "To keep infrastructure legible: reproducible over assembled, observable over assumed, portable by construction."
 
 [services]
 title = "Our Services"
-content = "1. 24/7 Managed Nodes\n2. Real-time Monitoring Systems\n3. High-Performance Static Deployments\n4. Legacy System Integration"
-
-[team]
-title = "The Crew"
-content = "SysOp Alpha: Lead Architect\nAdmin Beta: Network Specialist\nGuest Node: Exploration Protocol Activated"
+content = "BUILD: Application development, event-driven systems, delivery pipelines, supply chain security.\nRUN: Platform and infrastructure as code, Kubernetes and GitOps, cloud-agnostic architecture, configuration at scale.\nIMPROVE: Observability and data, performance and reliability, legacy and long-lived systems, AI-assisted delivery (opt-in)."

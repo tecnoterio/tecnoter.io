@@ -1,32 +1,517 @@
 {
   "posts": [
     {
-      "title": "Hello World",
-      "slug": "hello-world",
-      "url": "/posts/hello-world/",
-      "date": "2026-01-03",
-      "tags": ["intro","hugo"],
-      "categories": ["general"]
+      "title": "The Build Was Green and the Pipeline Was Lying",
+      "slug": "the-build-was-green-and-the-pipeline-was-lying",
+      "url": "/posts/the-build-was-green-and-the-pipeline-was-lying/",
+      "date": "2026-03-06",
+      "tags": [
+        "cicd",
+        "security",
+        "supply-chain",
+        "pipeline"
+      ],
+      "categories": []
+    },
+    {
+      "title": "We Deleted a Dashboard and Incident Time Went Down",
+      "slug": "we-deleted-a-dashboard-and-incident-time-went-down",
+      "url": "/posts/we-deleted-a-dashboard-and-incident-time-went-down/",
+      "date": "2026-03-02",
+      "tags": [
+        "observability",
+        "grafana",
+        "alerting",
+        "slo"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Backpressure Is Where Good Queues Go to Die",
+      "slug": "backpressure-is-where-good-queues-go-to-die",
+      "url": "/posts/backpressure-is-where-good-queues-go-to-die/",
+      "date": "2026-02-26",
+      "tags": [
+        "event-driven",
+        "kafka",
+        "streaming",
+        "reliability"
+      ],
+      "categories": []
+    },
+    {
+      "title": "We Ran Out of Connection Pool, Not Database",
+      "slug": "we-ran-out-of-connection-pool-not-database",
+      "url": "/posts/we-ran-out-of-connection-pool-not-database/",
+      "date": "2026-02-22",
+      "tags": [
+        "networking",
+        "performance",
+        "postgres",
+        "debugging"
+      ],
+      "categories": []
+    },
+    {
+      "title": "The OOM Killer Chose Wrong, and That Was Predictable",
+      "slug": "the-oom-killer-chose-wrong",
+      "url": "/posts/the-oom-killer-chose-wrong/",
+      "date": "2026-02-18",
+      "tags": [
+        "linux",
+        "memory",
+        "cgroups",
+        "debugging"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Preemptive Multitasking in 64 Kilobytes",
+      "slug": "preemptive-multitasking-in-64-kilobytes",
+      "url": "/posts/preemptive-multitasking-in-64-kilobytes/",
+      "date": "2026-02-12",
+      "tags": [
+        "retro",
+        "os",
+        "8-bit",
+        "symbos"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Recreating Hardware, and the Word Everyone Gets Wrong",
+      "slug": "recreating-hardware-and-the-word-everyone-gets-wrong",
+      "url": "/posts/recreating-hardware-and-the-word-everyone-gets-wrong/",
+      "date": "2026-02-08",
+      "tags": [
+        "retro",
+        "fpga",
+        "hardware",
+        "8-bit"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Sixty-Four Kilobytes, and Every Abstraction That Hid It",
+      "slug": "sixty-four-kilobytes-and-every-abstraction-that-hid-it",
+      "url": "/posts/sixty-four-kilobytes-and-every-abstraction-that-hid-it/",
+      "date": "2026-02-03",
+      "tags": [
+        "retro",
+        "hardware",
+        "8-bit",
+        "architecture"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Reading: Five Things Worth Reading",
+      "slug": "reading-five-things-worth-reading",
+      "url": "/posts/reading-five-things-worth-reading/",
+      "date": "2026-01-29",
+      "tags": [
+        "reading",
+        "observability",
+        "supply-chain",
+        "event-driven"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Reading: Retro Communities Worth Following",
+      "slug": "reading-retro-communities-worth-following",
+      "url": "/posts/reading-retro-communities-worth-following/",
+      "date": "2026-01-27",
+      "tags": [
+        "retro",
+        "reading",
+        "8-bit",
+        "community"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Reading: 8-Bit and 16-Bit Hardware Still Being Built",
+      "slug": "reading-8-bit-and-16-bit-hardware",
+      "url": "/posts/reading-8-bit-and-16-bit-hardware/",
+      "date": "2026-01-25",
+      "tags": [
+        "retro",
+        "hardware",
+        "8-bit",
+        "reading"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Reading: Kubernetes and GitOps, Mostly the Hard Parts",
+      "slug": "reading-kubernetes-and-gitops",
+      "url": "/posts/reading-kubernetes-and-gitops/",
+      "date": "2026-01-22",
+      "tags": [
+        "kubernetes",
+        "gitops",
+        "reading",
+        "platform"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Reading: Event-Driven Systems at Scale",
+      "slug": "reading-event-driven-at-scale",
+      "url": "/posts/reading-event-driven-at-scale/",
+      "date": "2026-01-20",
+      "tags": [
+        "event-driven",
+        "reading",
+        "kafka",
+        "streaming"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Reading: Supply Chain Security, After the Attacks",
+      "slug": "reading-supply-chain-after-the-attacks",
+      "url": "/posts/reading-supply-chain-after-the-attacks/",
+      "date": "2026-01-18",
+      "tags": [
+        "supply-chain",
+        "security",
+        "reading",
+        "slsa"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Reading: Observability, Worth Your Time",
+      "slug": "reading-observability-worth-your-time",
+      "url": "/posts/reading-observability-worth-your-time/",
+      "date": "2026-01-15",
+      "tags": [
+        "observability",
+        "reading",
+        "grafana",
+        "prometheus"
+      ],
+      "categories": []
+    },
+    {
+      "title": "GitOps for a Fleet You Do Not Own",
+      "slug": "gitops-for-a-fleet-you-do-not-own",
+      "url": "/posts/gitops-for-a-fleet-you-do-not-own/",
+      "date": "2026-01-08",
+      "tags": [
+        "gitops",
+        "argocd",
+        "platform",
+        "multi-tenant"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Seven Years of Notes From One Node",
+      "slug": "seven-years-of-notes-from-one-node",
+      "url": "/posts/seven-years-of-notes-from-one-node/",
+      "date": "2026-01-06",
+      "tags": [
+        "system",
+        "hardware",
+        "practice"
+      ],
+      "categories": []
     },
     {
       "title": "Node 1 Architecture Overview",
       "slug": "node-architecture",
       "url": "/posts/node-architecture/",
       "date": "2026-01-03",
-      "tags": ["system","hardware"],
+      "tags": [
+        "system",
+        "hardware"
+      ],
       "categories": []
     },
     {
-      "title": "test",
-      "slug": "test",
-      "url": "/posts/test/",
-      "date": "2026-01-03",
-      "tags": ["test","hugo"],
-      "categories": ["general"]
-    }],
+      "title": "Capacity Planning From the Data You Already Have",
+      "slug": "capacity-planning-from-the-data-you-already-have",
+      "url": "/posts/capacity-planning-from-the-data-you-already-have/",
+      "date": "2025-09-23",
+      "tags": [
+        "observability",
+        "forecasting",
+        "capacity",
+        "data"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Signing What You Build, and Then Checking It",
+      "slug": "signing-what-you-build-and-then-checking-it",
+      "url": "/posts/signing-what-you-build-and-then-checking-it/",
+      "date": "2025-08-06",
+      "tags": [
+        "supply-chain",
+        "security",
+        "cicd",
+        "kubernetes"
+      ],
+      "categories": []
+    },
+    {
+      "title": "What a Thirty-Year Career Is Actually Good For",
+      "slug": "what-a-thirty-year-career-is-actually-good-for",
+      "url": "/posts/what-a-thirty-year-career-is-actually-good-for/",
+      "date": "2025-05-14",
+      "tags": [
+        "practice",
+        "career",
+        "engineering"
+      ],
+      "categories": []
+    },
+    {
+      "title": "I Let a Model Read Our Pipeline Failures for Three Months",
+      "slug": "i-let-a-model-read-our-pipeline-failures",
+      "url": "/posts/i-let-a-model-read-our-pipeline-failures/",
+      "date": "2025-02-19",
+      "tags": [
+        "ai",
+        "cicd",
+        "automation",
+        "practice"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Node 1, Seven Years On",
+      "slug": "node-1-seven-years-on",
+      "url": "/posts/node-1-seven-years-on/",
+      "date": "2024-09-08",
+      "tags": [
+        "system",
+        "hardware",
+        "operations"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Log Aggregation Is a Cost Model, Not a Storage Problem",
+      "slug": "log-aggregation-is-a-cost-model",
+      "url": "/posts/log-aggregation-is-a-cost-model/",
+      "date": "2024-06-17",
+      "tags": [
+        "observability",
+        "loki",
+        "logging",
+        "cost"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Exactly-Once Costs Something, and the Bill Arrives Later",
+      "slug": "exactly-once-costs-something",
+      "url": "/posts/exactly-once-costs-something/",
+      "date": "2024-04-11",
+      "tags": [
+        "event-driven",
+        "kafka",
+        "architecture",
+        "distributed-systems"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Argo CD and the Drift You Stopped Noticing",
+      "slug": "argo-cd-and-the-drift-you-stopped-noticing",
+      "url": "/posts/argo-cd-and-the-drift-you-stopped-noticing/",
+      "date": "2024-01-23",
+      "tags": [
+        "gitops",
+        "argocd",
+        "kubernetes",
+        "operations"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Anomaly Detection That Nobody Watches",
+      "slug": "anomaly-detection-that-nobody-watches",
+      "url": "/posts/anomaly-detection-that-nobody-watches/",
+      "date": "2023-09-12",
+      "tags": [
+        "observability",
+        "anomaly-detection",
+        "ml",
+        "alerting"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Sampling Is the Whole Design Decision in Tracing",
+      "slug": "sampling-is-the-whole-design-decision-in-tracing",
+      "url": "/posts/sampling-is-the-whole-design-decision-in-tracing/",
+      "date": "2023-06-27",
+      "tags": [
+        "observability",
+        "tempo",
+        "tracing",
+        "opentelemetry"
+      ],
+      "categories": []
+    },
+    {
+      "title": "A Dockerfile Is a Build Reproducibility Problem",
+      "slug": "a-dockerfile-is-a-build-reproducibility-problem",
+      "url": "/posts/a-dockerfile-is-a-build-reproducibility-problem/",
+      "date": "2023-04-18",
+      "tags": [
+        "containers",
+        "cicd",
+        "supply-chain",
+        "build"
+      ],
+      "categories": []
+    },
+    {
+      "title": "The Outbox Pattern, and Why the Obvious Fix Is Wrong",
+      "slug": "the-outbox-pattern-and-why-the-obvious-fix-is-wrong",
+      "url": "/posts/the-outbox-pattern-and-why-the-obvious-fix-is-wrong/",
+      "date": "2023-01-24",
+      "tags": [
+        "event-driven",
+        "kafka",
+        "architecture",
+        "reliability"
+      ],
+      "categories": []
+    },
+    {
+      "title": "The Observability Bill That Grew 400 Percent",
+      "slug": "the-observability-bill-that-grew-400-percent",
+      "url": "/posts/the-observability-bill-that-grew-400-percent/",
+      "date": "2022-11-02",
+      "tags": [
+        "observability",
+        "grafana",
+        "prometheus",
+        "cost"
+      ],
+      "categories": []
+    },
+    {
+      "title": "A Pipeline That Nobody Skips",
+      "slug": "a-pipeline-that-nobody-skips",
+      "url": "/posts/a-pipeline-that-nobody-skips/",
+      "date": "2022-03-09",
+      "tags": [
+        "cicd",
+        "pipelines",
+        "practice"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Cardinality Is a Design Decision",
+      "slug": "cardinality-is-a-design-decision",
+      "url": "/posts/cardinality-is-a-design-decision/",
+      "date": "2022-02-08",
+      "tags": [
+        "observability",
+        "prometheus",
+        "mimir",
+        "design"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Tracing One Slow Request All the Way Down",
+      "slug": "tracing-one-slow-request-all-the-way-down",
+      "url": "/posts/tracing-one-slow-request-all-the-way-down/",
+      "date": "2021-11-03",
+      "tags": [
+        "observability",
+        "tracing",
+        "performance",
+        "debugging"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Terraform State Is the Part That Lies",
+      "slug": "terraform-state-is-the-part-that-lies",
+      "url": "/posts/terraform-state-is-the-part-that-lies/",
+      "date": "2021-10-05",
+      "tags": [
+        "terraform",
+        "iac",
+        "infrastructure"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Idempotence Is a Design Constraint, Not a Feature",
+      "slug": "idempotence-is-a-design-constraint",
+      "url": "/posts/idempotence-is-a-design-constraint/",
+      "date": "2021-02-08",
+      "tags": [
+        "ansible",
+        "configuration",
+        "automation"
+      ],
+      "categories": []
+    },
+    {
+      "title": "The DNS Lookup That Took Eleven Seconds",
+      "slug": "the-dns-lookup-that-took-eleven-seconds",
+      "url": "/posts/the-dns-lookup-that-took-eleven-seconds/",
+      "date": "2020-09-03",
+      "tags": [
+        "networking",
+        "debugging",
+        "dns"
+      ],
+      "categories": []
+    },
+    {
+      "title": "The Systemd Unit That Deadlocked Itself",
+      "slug": "the-systemd-unit-that-deadlocked-itself",
+      "url": "/posts/the-systemd-unit-that-deadlocked-itself/",
+      "date": "2020-05-19",
+      "tags": [
+        "linux",
+        "systemd",
+        "debugging",
+        "fundamentals"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Drift Is Not a Bug, It Is a Symptom",
+      "slug": "drift-is-not-a-bug-it-is-a-symptom",
+      "url": "/posts/drift-is-not-a-bug-it-is-a-symptom/",
+      "date": "2019-11-14",
+      "tags": [
+        "configuration",
+        "drift",
+        "operations"
+      ],
+      "categories": []
+    },
+    {
+      "title": "Why I Still Use a Text Editor on a Server",
+      "slug": "why-i-still-use-a-text-editor-on-a-server",
+      "url": "/posts/why-i-still-use-a-text-editor-on-a-server/",
+      "date": "2019-03-12",
+      "tags": [
+        "linux",
+        "fundamentals"
+      ],
+      "categories": []
+    }
+  ],
   "pages": [
     {
-      "title": "Our Story",
+      "title": "About",
       "slug": "bio",
       "url": "/pages/bio/",
       "date": "0001-01-01",
@@ -34,15 +519,7 @@
       "categories": []
     },
     {
-      "title": "System Statistics",
-      "slug": "stats",
-      "url": "/pages/stats/",
-      "date": "0001-01-01",
-      "tags": [],
-      "categories": []
-    },
-    {
-      "title": "Technical Expertise",
+      "title": "Expertise",
       "slug": "skills",
       "url": "/pages/skills/",
       "date": "0001-01-01",
@@ -50,7 +527,7 @@
       "categories": []
     },
     {
-      "title": "Contact Protocol",
+      "title": "Contact",
       "slug": "contact",
       "url": "/pages/contact/",
       "date": "0001-01-01",
@@ -58,7 +535,7 @@
       "categories": []
     },
     {
-      "title": "Our Vision",
+      "title": "Vision",
       "slug": "vision",
       "url": "/pages/vision/",
       "date": "0001-01-01",
@@ -66,14 +543,118 @@
       "categories": []
     },
     {
-      "title": "Our Services",
+      "title": "Services",
       "slug": "services",
       "url": "/pages/services/",
       "date": "0001-01-01",
       "tags": [],
       "categories": []
-    }],
-  "socials": [{"name":"github","url":"https://github.com/tecnoterio"},{"name":"bluesky","url":"https://bsky.app/profile/tecnoterio"}],
-  "fortunes": [{"text":"Simplicity is the soul of efficiency."},{"text":"Code is like humor. When you have to explain it, it's bad."},{"text":"Fix the cause, not the symptom."},{"text":"The best error message is the one that never appears."},{"text":"Small pieces, loosely joined."},{"text":"Minimalism is not a lack of something. It is simply the perfect amount of something."},{"text":"Optimization is the root of all evil if done prematurely."},{"text":"A terminal is a conversation with the machine."},{"text":"Retro-functionalism: High tech, low noise."},{"text":"Uplink established. Truth incoming."}],
-  "systemInfo": {"loadaverage":"0.42, 0.38, 0.45","motdsuggestion":"Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit.","nodename":"tecnoterio node 1","uptime":"42 days, 13:07"}
+    },
+    {
+      "title": "Development",
+      "slug": "development",
+      "url": "/pages/development/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Systems and Infrastructure",
+      "slug": "systems",
+      "url": "/pages/systems/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Delivery",
+      "slug": "delivery",
+      "url": "/pages/delivery/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Observability and Data",
+      "slug": "observability",
+      "url": "/pages/observability/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    },
+    {
+      "title": "Security and Practice",
+      "slug": "security",
+      "url": "/pages/security/",
+      "date": "0001-01-01",
+      "tags": [],
+      "categories": []
+    }
+  ],
+  "socials": [
+    {
+      "name": "github",
+      "url": "https://github.com/tecnoterio"
+    },
+    {
+      "name": "bluesky",
+      "url": "https://bsky.app/profile/tecnoterio"
+    }
+  ],
+  "fortunes": [
+    {
+      "text": "Simplicity is the soul of efficiency."
+    },
+    {
+      "text": "Code is like humor. When you have to explain it, it's bad."
+    },
+    {
+      "text": "Fix the cause, not the symptom."
+    },
+    {
+      "text": "The best error message is the one that never appears."
+    },
+    {
+      "text": "Small pieces, loosely joined."
+    },
+    {
+      "text": "Minimalism is not a lack of something. It is simply the perfect amount of something."
+    },
+    {
+      "text": "Premature optimization is the root of all evil. Premature automation is worse."
+    },
+    {
+      "text": "A terminal is a conversation with the machine."
+    },
+    {
+      "text": "Retro-functionalism: high tech, low noise."
+    },
+    {
+      "text": "Uplink established. Truth incoming."
+    },
+    {
+      "text": "Anything added dilutes everything else."
+    },
+    {
+      "text": "Plan for the failure you did not expect, then forget you ever did."
+    },
+    {
+      "text": "It is easier to change the specification to fit the program than vice versa."
+    },
+    {
+      "text": "There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors."
+    },
+    {
+      "text": "A pipeline is a promise that the output of one stage is valid input to the next."
+    },
+    {
+      "text": "Boring is a compliment you can deploy."
+    }
+  ],
+  "systemInfo": {
+    "uptime": "42 days, 13:07",
+    "loadAverage": "0.42, 0.38, 0.45",
+    "motdSuggestion": "Type 'help' to see available commands. Use Ctrl+D or 'logout' to exit.",
+    "nodeName": "tecnoterio node 1"
+  }
 }

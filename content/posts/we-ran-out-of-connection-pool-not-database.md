@@ -1,0 +1,72 @@
++++
+title = "We Ran Out of Connection Pool, Not Database"
+date = 2026-02-22
+weight = 355693
+tags = ["networking", "performance", "postgres", "debugging"]
+[taxonomies]
+tags = ["networking", "performance", "postgres", "debugging"]
++++
+
+For about a month, a service degraded under load and recovered when traffic
+dropped. No errors, no restarts, no deploys in the window. The database was
+fine, which we knew because we were looking at the database, and the
+application was fine in every way we could see from outside.
+
+What we were looking at was the wrong layer. The application was fine because
+it had spent most of its requests waiting to be allowed to touch the
+database.
+
+The number of database connections is bounded by the pool, and the pool is
+what enforces the limit the database can actually survive. The failure mode
+when that bound is wrong is not an error. It is a queue. Requests arrive, they
+wait for a connection, and the wait is invisible in the response because the
+client has its own generous timeout and eventually gets a response. Median
+latency looks acceptable because many requests do not queue at all. The tail
+is where all the damage is.
+
+**What gave it away, eventually.** Client-side timing showed a gap between
+request arrival and the first line of application work, which meant the time
+was spent before the handler ran at all. Nothing in our instrumentation was
+covering that region, because everything we instrumented was inside the
+handler, and the handler had not been reached.
+
+That is the general shape of this class of bug and it is worth stating
+plainly: the traces accounted for four hundred milliseconds of work inside a
+four second request, and the remaining three and a half seconds were a queue
+that did not exist in any trace, because a queue of this kind is time spent
+in the pool's acquisition path, before the code that would have recorded it.
+
+**The actual cause was two numbers nobody owned.** The pool size and the
+database's connection limit were both derived, independently, from defaults,
+and the defaults had been correct at a scale that no longer existed. Under
+concurrency the pool was creating connections faster than they were returned,
+and the creation itself was the expensive part, because each one is a TCP
+handshake, a TLS negotiation if you have one, and an authentication round
+trip. We were paying connection setup cost on the hot path, and it got worse
+exactly when the system was busiest, which is the opposite of what any
+scaling story should do.
+
+**The fix was three changes, in order of how much they mattered.** Instrument
+pool acquisition, not just the query, so the wait is visible. Set the pool
+size from measured behaviour, which is almost always smaller than people
+guess, because a larger pool moves the queue from the application to the
+database and does not remove it. And give the pool a time-to-live on
+connections, so the steady state is reuse rather than a churn of new
+handshakes.
+
+The remaining lesson is about the read path. We had a report that ran a
+sequence of seven queries in one connection, and it held a connection for the
+duration, which is fine at low concurrency and catastrophic at high
+concurrency. Long transactions holding a pooled connection are how a
+transactional workload becomes a throughput problem with no error message
+anywhere.
+
+If you take one thing from this: measure the wait before the work, not only
+the work. The queue is the system, and the queue is where the tail latency
+lives.
+
+## References
+
+- [PostgreSQL documentation](https://www.postgresql.org/docs/current/) — connection handling and the client library configuration
+- [Managing resources for containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) — if the service is bounded by cgroup limits rather than by the pool
+- [Implementing SLOs](https://sre.google/workbook/implementing-slos/) — because a p99 with no explanation is an SLO with no error budget attached to it

@@ -1,68 +1,35 @@
 +++
-title = "Technical Expertise"
+title = "Expertise"
 slug = "skills"
 group = "directory"
 weight = 2
 +++
-Our expertise spans across cutting-edge infrastructure technologies, AI-driven engineering practices, and cloud-agnostic architectures. We combine deep technical knowledge with innovative approaches to deliver solutions that are both powerful and elegant.
 
-## Infrastructure as Code & Automation
+The depth behind the services, split into five pages so each is readable in
+one sitting. Every section is also reachable from a plain-language search
+term as well as the technology name, because the two are rarely the same
+words.
 
-### HashiCorp Stack Mastery
-- **Terraform**: Advanced infrastructure provisioning with state management, modules, and provider optimization
-- **Packer**: Immutable infrastructure and custom image creation
-- **Vault**: Secrets management and identity-based access control
-- **Consul**: Service discovery, configuration, and segmentation
-- **Nomad**: Cluster orchestration and workload scheduling
+A long career building systems, which in practice means both halves of the
+job: the code, and the machines it has to survive on. Almost nothing here is
+limited to one layer, and that is deliberate.
 
-### Configuration Management
-- **Ansible**: Agentless automation, playbooks, and role-based architectures
-- **SaltStack**: Event-driven automation and remote execution
-- **Puppet**: Declarative configuration and environment management
+## The five
 
-## Cloud-Native Technologies
+- **[Development](/pages/development/)** — C, C++, Go, Python, TypeScript, application architecture, and the event-driven work. *Search terms: asynchronous, messaging, queue, Kafka, streaming, saga.*
+- **[Systems and Infrastructure](/pages/systems/)** — Unix and Linux internals, networking, shell, debugging, host security, Ansible, Packer, Terraform. *Search terms: sysadmin, server, bash, hardening, performance tuning, golden image, drift, IaC, modules.*
+- **[Delivery](/pages/delivery/)** — Kubernetes and GitOps, CI/CD pipelines, supply chain security, AI-assisted delivery. *Search terms: build automation, deployment, release, runner, monorepo, SBOM, signing, provenance, CVE, test generation.*
+- **[Observability and Data](/pages/observability/)** — the Grafana LGTM stack, SLOs, cloud-agnostic architecture, telemetry analytics, modelling. *Search terms: monitoring, logging, tracing, dashboards, alerting, uptime, outage detection, cost control, multi-cloud, vendor lock-in, reporting, forecasting, prediction, machine learning.*
+- **[Security and Practice](/pages/security/)** — threat modelling, zero trust, audit evidence, and how the work is done. *Search terms: SOC 2, ISO 27001, HIPAA, audit, penetration testing, vulnerability, secrets, encryption, runbooks, post-mortem.*
 
-### Container & Orchestration
-- **Kubernetes**: Cluster management, Helm charts, and operator development
-- **Docker**: Containerization and multi-stage builds
-- **Podman**: Rootless containers and security-focused workflows
+## Depth That Spans the Whole System
 
-### Message Queuing & Streaming
-- **Apache Kafka**: Distributed streaming platform, event sourcing, and real-time data pipelines
-- **Redis**: In-memory data structures, caching, and pub/sub messaging
-- **RabbitMQ**: Message broker and workflow orchestration
+Most problems do not respect the boundary between "application" and
+"infrastructure". A slow endpoint is a query plan, a connection pool, a DNS
+lookup, a filesystem, or a scheduler, and it is usually the one nobody was
+looking at. The value of working across both layers is that the diagnosis
+does not have to be handed over to find the layer where the fault is.
 
-### Database Technologies
-- **PostgreSQL**: Advanced relational databases, JSON support, and spatial data
-- **MySQL/MariaDB**: High-performance relational databases and replication
-- **MongoDB**: NoSQL document databases and aggregation frameworks
-- **Elasticsearch**: Search analytics and log management
-
-## Cloud Agnostic Architecture
-
-### Multi-Cloud Expertise
-- **AWS**: EC2, S3, RDS, Lambda, and infrastructure optimization
-- **Google Cloud**: GKE, Cloud Functions, and BigQuery integration
-- **Azure**: AKS, Blob Storage, and Cosmos DB solutions
-- **OpenStack**: Private cloud deployment and hybrid cloud strategies
-
-### Infrastructure & Networking
-- **Network Automation**: SDN, load balancing, and DNS management
-- **Monitoring & Observability**: Prometheus, Grafana, and distributed tracing
-- **CI/CD Pipelines**: GitHub Actions, GitLab CI, and automated testing
-
-## AI & Machine Learning Integration
-
-### AI-Enhanced Operations
-- Predictive analytics for infrastructure optimization
-- Automated anomaly detection and root cause analysis
-- Intelligent resource allocation and cost optimization
-- Machine learning model deployment and MLOps pipelines
-
-## Performance & Security
-
-### Low-Level Optimization
-- Systems architecture and performance tuning
-- Security-first design and penetration testing
-- High-availability and disaster recovery planning
-- Compliance frameworks (SOC2, ISO 27001, HIPAA)
+A career that spans systems work, networking, and application development is
+worth more than the sum of the parts, because the difficult problems rarely
+respect the line.
