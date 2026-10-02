@@ -32,3 +32,7 @@ static/js/wasm/
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Tooling caches
+.font-cache/
+shell_wasm/.tt-files/

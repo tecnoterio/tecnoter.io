@@ -14,7 +14,7 @@ site is built by Zola.
 ├── shell_wasm/         # Rust -> WASM. The terminal's command processor
 ├── templates/          # Zola / Tera templates
 ├── static/             # js, css, fonts. WASM is built into static/js/wasm
-├── scripts/zola/       # index.json generation + parity check
+├── scripts/zola/       # index.json generation, parity check, link check
 ├── tests/golden/       # committed JSON reference (see "Parity")
 ├── zola.toml
 └── Makefile
@@ -23,10 +23,11 @@ site is built by Zola.
 ## Commands
 
 ```bash
-make build          # WASM -> Zola -> index.json -> parity check
+make build          # WASM -> link check -> Zola -> index.json -> parity check
 make serve          # dev server on http://127.0.0.1:1111
 make dev            # dev server + WASM rebuild on change
 make build-wasm     # Rust -> WASM into static/js/wasm
+make check-links    # verify every external link still resolves
 make accept-content # after an intentional content edit, see "Parity"
 ```
 
