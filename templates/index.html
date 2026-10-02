@@ -5,6 +5,11 @@
   <meta charset="utf-8">
   <title>{{ config.title }}</title>
   <link rel="icon" type="image/svg+xml" href="{{ base }}/favicon.svg">
+{% set page_title = config.title %}
+{% set page_desc = config.description %}
+{% set page_url = config.base_url ~ "/" %}
+{% set page_date = "" %}
+{% include "partials/meta.html" %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -30,16 +35,10 @@
   {% endfor %}
   
   window.siteFortunes = [
-    {text: "Simplicity is the soul of efficiency."},
-    {text: "Code is like humor. When you have to explain it, it's bad."},
-    {text: "Fix the cause, not the symptom."},
-    {text: "The best error message is the one that never appears."},
-    {text: "Small pieces, loosely joined."},
-    {text: "Minimalism is not a lack of something. It is simply the perfect amount of something."},
-    {text: "Optimization is the root of all evil if done prematurely."},
-    {text: "A terminal is a conversation with the machine."},
-    {text: "Retro-functionalism: High tech, low noise."},
-    {text: "Uplink established. Truth incoming."}
+    {% set fortunes = load_data(path="data/fortunes.toml") %}
+    {% for fortune in fortunes.fortunes %}
+    {text: "{{ fortune.text }}"},
+    {% endfor %}
   ];
   
   window.SITE_BASE = "{{ base }}";

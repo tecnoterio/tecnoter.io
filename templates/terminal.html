@@ -5,6 +5,11 @@
   <meta charset="utf-8">
   <title>Terminal | {{ config.title }}</title>
   <link rel="icon" type="image/svg+xml" href="{{ base }}/favicon.svg">
+{% set page_title = config.title %}
+{% set page_desc = config.description %}
+{% set page_url = config.base_url ~ "/" %}
+{% set page_date = "" %}
+{% include "partials/meta.html" %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">

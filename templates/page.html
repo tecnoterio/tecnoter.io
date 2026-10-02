@@ -5,6 +5,11 @@
   <meta charset="utf-8">
   <title>{{ page.title }} | {{ config.title }}</title>
   <link rel="icon" type="image/svg+xml" href="{{ base }}/favicon.svg">
+{% set page_title = page.title %}
+{% set page_desc = page.description | default(value=page.content, boolean=true) %}
+{% set page_url = config.base_url ~ page.path %}
+{% set page_date = page.date | default(value="") %}
+{% include "partials/meta.html" %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -16,8 +21,8 @@
   
   <script>
     window.isInternalPage = true;
+    window.SITE_BASE = "{{ base }}";
   </script>
-  window.SITE_BASE = "{{ base }}";
   <script type="module" src="{{ base }}/js/terminal.js"></script>
 </body>
 </html>

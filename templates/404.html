@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% set base = get_env(name="TECNOTER_BASE", default="") %}
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>NO CARRIER | {{ config.title }}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ base }}/favicon.svg">
+  <meta name="description" content="Requested path not found on tecnoter.io node 1.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ base }}/css/terminal.css">
+  <style>
+    body { display: block; overflow: auto; background: #0b0b0d; color: #00ff66; }
+    .nf { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .nf pre { font-family: 'VT323', monospace; font-size: 1.6rem; line-height: 1.35; color: #00ff66; }
+    .nf a { color: #00ff66; }
+  </style>
+</head>
+<body>
+  <div class="nf">
+    <pre>NO CARRIER
+
+Connection to the requested path failed.
+
+  target : (path not found)
+  node   : tecnoter.io node 1
+  status : 404
+
+The path does not exist, or it existed once and no longer does.
+
+Try one of these:
+  /                      the node
+  /posts/                bulletins
+  /terminal/             terminal session
+  /pages/bio/            who we are
+  /pages/services/       what we do
+  /pages/contact/        how to reach us
+
+<a href="{{ base }}/">&laquo; RECONNECT</a></pre>
+  </div>
+</body>
+</html>

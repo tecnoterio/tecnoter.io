@@ -1,0 +1,22 @@
+{%- set d = page_desc | striptags | replace(from="\n", to=" ") | replace(from="  ", to=" ") | trim | truncate(length=190) | trim -%}
+{%- set t = page_title | striptags | trim -%}
+<meta name="description" content="{{ d }}">
+<meta property="og:type" content="{% if page_date %}article{% else %}website{% endif %}">
+<meta property="og:site_name" content="{{ config.title }}">
+<meta property="og:title" content="{{ t }}">
+<meta property="og:description" content="{{ d }}">
+<meta property="og:url" content="{{ page_url }}">
+<meta property="og:image" content="{{ config.base_url }}/assets/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ t }}">
+<meta name="twitter:description" content="{{ d }}">
+<meta name="twitter:image" content="{{ config.base_url }}/assets/og-default.png">
+{%- if page_date %}
+<meta property="article:published_time" content="{{ page_date }}">
+{%- endif %}
+<link rel="canonical" href="{{ page_url }}">
+{%- if config.generate_feeds %}
+<link rel="alternate" type="application/atom+xml" title="{{ config.title }}" href="{{ config.base_url }}/atom.xml">
+{%- endif %}
